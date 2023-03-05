@@ -1,4 +1,6 @@
-package it.unicam.cs.pa;public class Main {
+package it.unicam.cs.pa;
+
+public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world!");
     }

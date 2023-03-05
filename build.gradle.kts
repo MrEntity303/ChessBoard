@@ -17,3 +17,9 @@ dependencies {
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
+tasks {
+    val run by creating(JavaExec::class) {
+        mainClass.set("it.unicam.cs.pa.Main")
+        classpath = sourceSets.main.get().runtimeClasspath
+    }
+}
