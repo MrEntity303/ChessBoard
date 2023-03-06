@@ -31,7 +31,7 @@ public abstract class Game {
             return false;//TODO aggiungere condizione di fine gioco
         }
 
-    protected abstract boolean validator(ChessPiece chessPiece, int x, int y);
+    protected abstract boolean validator(ChessPiece chessPiece, Position origin, Position destination);
 
     protected void printResult(){
 //        System.out.println("Il gioco è finito, turni passati: " + (this.getCountTurns()-1));

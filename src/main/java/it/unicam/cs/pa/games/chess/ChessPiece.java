@@ -4,7 +4,6 @@ import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.PieceInterface;
 import lombok.Getter;
 
-@Getter
 public class ChessPiece implements PieceInterface<ChessPieceType> {
     private final ChessPieceType type;
     private final Color color;
@@ -23,4 +22,6 @@ public class ChessPiece implements PieceInterface<ChessPieceType> {
     public Color getColor() {
         return color;
     }
+
+
 }

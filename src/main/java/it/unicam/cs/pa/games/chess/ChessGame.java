@@ -1,8 +1,10 @@
 package it.unicam.cs.pa.games.chess;
 
 import it.unicam.cs.pa.games.Game;
+import it.unicam.cs.pa.games.Position;
 
 public class ChessGame extends Game {
+    private final ChessBoard board = new ChessBoard();
 
     @Override
     protected void initialize() {
@@ -22,43 +24,43 @@ public class ChessGame extends Game {
     }
 
     @Override
-    protected boolean validator(ChessPiece chessPiece, int x, int y) {
+    protected boolean validator(ChessPiece chessPiece, Position origin, Position destination) {
         return switch (chessPiece.getType()) {
-            case KING -> kingValidator(chessPiece, x, y);
-            case QUEEN -> queenValidator(chessPiece, x, y);
-            case ROOK -> rookValidator(chessPiece, x, y);
-            case BISHOP -> bishopValidator(chessPiece, x, y);
-            case KNIGHT -> knightValidator(chessPiece, x, y);
-            case PAWN -> pawnValidator(chessPiece, x, y);
+            case KING -> kingValidator(chessPiece, origin, destination);
+            case QUEEN -> queenValidator(chessPiece, origin, destination);
+            case ROOK -> rookValidator(chessPiece, origin, destination);
+            case BISHOP -> bishopValidator(chessPiece, origin, destination);
+            case KNIGHT -> knightValidator(chessPiece, origin, destination);
+            case PAWN -> pawnValidator(chessPiece, origin, destination);
         };
     }
 
-    private boolean pawnValidator(ChessPiece chessPiece, int x, int y) {
+    private boolean pawnValidator(ChessPiece chessPiece, Position origin, Position destination){
         //TODO: implement
         return false;
     }
 
-    private boolean knightValidator(ChessPiece chessPiece, int x, int y) {
+    private boolean knightValidator(ChessPiece chessPiece, Position origin, Position destination) {
         //TODO: implement
         return false;
     }
 
-    private boolean bishopValidator(ChessPiece chessPiece, int x, int y) {
+    private boolean bishopValidator(ChessPiece chessPiece, Position origin, Position destination) {
         //TODO: implement
         return false;
     }
 
-    private boolean rookValidator(ChessPiece chessPiece, int x, int y) {
+    private boolean rookValidator(ChessPiece chessPiece, Position origin, Position destination) {
         //TODO: implement
         return false;
     }
 
-    private boolean queenValidator(ChessPiece chessPiece, int x, int y) {
+    private boolean queenValidator(ChessPiece chessPiece, Position origin, Position destination) {
         //TODO: implement
         return false;
     }
 
-    private boolean kingValidator(ChessPiece chessPiece, int x, int y) {
+    private boolean kingValidator(ChessPiece chessPiece, Position origin, Position destination) {
         //TODO: implement
         return false;
     }
