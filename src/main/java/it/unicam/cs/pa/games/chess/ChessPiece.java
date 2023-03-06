@@ -5,17 +5,17 @@ import it.unicam.cs.pa.games.PieceInterface;
 import lombok.Getter;
 
 @Getter
-public class PieceChess implements PieceInterface<PieceChessType> {
-    private final PieceChessType type;
+public class ChessPiece implements PieceInterface<ChessPieceType> {
+    private final ChessPieceType type;
     private final Color color;
 
-    public PieceChess(PieceChessType type, Color color) {
+    public ChessPiece(ChessPieceType type, Color color) {
         this.type = type;
         this.color = color;
     }
 
     @Override
-    public PieceChessType getType() {
+    public ChessPieceType getType() {
         return type;
     }
 

@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.games;
 
-import it.unicam.cs.pa.games.chess.PieceChess;
+import it.unicam.cs.pa.games.chess.ChessPiece;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +31,7 @@ public abstract class Game {
             return false;//TODO aggiungere condizione di fine gioco
         }
 
-    protected abstract boolean validator(PieceChess pieceChess, int x, int y);
+    protected abstract boolean validator(ChessPiece chessPiece, int x, int y);
 
     protected void printResult(){
 //        System.out.println("Il gioco è finito, turni passati: " + (this.getCountTurns()-1));

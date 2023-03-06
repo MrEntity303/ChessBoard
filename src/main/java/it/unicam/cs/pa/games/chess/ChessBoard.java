@@ -5,7 +5,7 @@ import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.PieceInterface;
 import java.util.ArrayList;
 public class ChessBoard implements Board {
-    private final ArrayList<ArrayList<PieceChess>> board;
+    private final ArrayList<ArrayList<ChessPiece>> board;
 
     /**
      * Create a new ChessBoard
@@ -18,7 +18,7 @@ public class ChessBoard implements Board {
 
         this.board = new ArrayList<>();
         for(int i = 0; i < width; i++) {
-        	this.board.add(new ArrayList<PieceChess>());
+        	this.board.add(new ArrayList<ChessPiece>());
         	for(int j = 0; j < height; j++) {
         		this.board.get(i).add(null);
         	}
@@ -64,7 +64,7 @@ public class ChessBoard implements Board {
      **/
     @Override
     public <T> void setPiece(PieceInterface<T> piece, int x, int y) {
-        this.board.get(x).set(y, (PieceChess) piece);
+        this.board.get(x).set(y, (ChessPiece) piece);
     }
 
     /**
@@ -74,7 +74,7 @@ public class ChessBoard implements Board {
      *      @return the piece in the specified position
      **/
     @Override
-    public PieceChess getPiece(int x, int y) {
+    public ChessPiece getPiece(int x, int y) {
         return this.board.get(x).get(y);
     }
 
@@ -108,7 +108,7 @@ public class ChessBoard implements Board {
      **/
     @Override
     public void move(int x_origin, int y_origin, int x_dest, int y_dest) {
-    	PieceChess piece = this.getPiece(x_origin, y_origin);
+    	ChessPiece piece = this.getPiece(x_origin, y_origin);
     	this.removePiece(x_origin, y_origin);
     	this.setPiece(piece, x_dest, y_dest);
     }
@@ -119,18 +119,18 @@ public class ChessBoard implements Board {
      **/
     private void setupBlackPieces() {
         //Posizione le torri nere
-        this.setPiece(new PieceChess(PieceChessType.ROOK, Color.BLACK), 7, 0);
-        this.setPiece(new PieceChess(PieceChessType.ROOK, Color.BLACK), 7, 7);
+        this.setPiece(new ChessPiece(ChessPieceType.ROOK, Color.BLACK), 7, 0);
+        this.setPiece(new ChessPiece(ChessPieceType.ROOK, Color.BLACK), 7, 7);
         //Posizione i cavalli neri
-        this.setPiece(new PieceChess(PieceChessType.KNIGHT, Color.BLACK), 7, 1);
-        this.setPiece(new PieceChess(PieceChessType.KNIGHT, Color.BLACK), 7, 6);
+        this.setPiece(new ChessPiece(ChessPieceType.KNIGHT, Color.BLACK), 7, 1);
+        this.setPiece(new ChessPiece(ChessPieceType.KNIGHT, Color.BLACK), 7, 6);
         //Posizione i alfieri neri
-        this.setPiece(new PieceChess(PieceChessType.BISHOP, Color.BLACK), 7, 2);
-        this.setPiece(new PieceChess(PieceChessType.BISHOP, Color.BLACK), 7, 5);
+        this.setPiece(new ChessPiece(ChessPieceType.BISHOP, Color.BLACK), 7, 2);
+        this.setPiece(new ChessPiece(ChessPieceType.BISHOP, Color.BLACK), 7, 5);
         //Posizione il re nero
-        this.setPiece(new PieceChess(PieceChessType.KING, Color.BLACK), 7, 4);
+        this.setPiece(new ChessPiece(ChessPieceType.KING, Color.BLACK), 7, 4);
         //Posizione la regina nera
-        this.setPiece(new PieceChess(PieceChessType.QUEEN, Color.BLACK), 7, 3);
+        this.setPiece(new ChessPiece(ChessPieceType.QUEEN, Color.BLACK), 7, 3);
     }
 
     /**
@@ -138,18 +138,18 @@ public class ChessBoard implements Board {
      **/
     private void setupWhitePieces() {
         //Posizione le torri bianche
-        this.setPiece(new PieceChess(PieceChessType.ROOK, Color.WHITE), 0, 0);
-        this.setPiece(new PieceChess(PieceChessType.ROOK, Color.WHITE), 0, 7);
+        this.setPiece(new ChessPiece(ChessPieceType.ROOK, Color.WHITE), 0, 0);
+        this.setPiece(new ChessPiece(ChessPieceType.ROOK, Color.WHITE), 0, 7);
         //Posizione i cavalli bianchi
-        this.setPiece(new PieceChess(PieceChessType.KNIGHT, Color.WHITE), 0, 1);
-        this.setPiece(new PieceChess(PieceChessType.KNIGHT, Color.WHITE), 0, 6);
+        this.setPiece(new ChessPiece(ChessPieceType.KNIGHT, Color.WHITE), 0, 1);
+        this.setPiece(new ChessPiece(ChessPieceType.KNIGHT, Color.WHITE), 0, 6);
         //Posizione i alfieri bianchi
-        this.setPiece(new PieceChess(PieceChessType.BISHOP, Color.WHITE), 0, 2);
-        this.setPiece(new PieceChess(PieceChessType.BISHOP, Color.WHITE), 0, 5);
+        this.setPiece(new ChessPiece(ChessPieceType.BISHOP, Color.WHITE), 0, 2);
+        this.setPiece(new ChessPiece(ChessPieceType.BISHOP, Color.WHITE), 0, 5);
         //Posizione la regina bianca
-        this.setPiece(new PieceChess(PieceChessType.QUEEN, Color.WHITE), 0, 3);
+        this.setPiece(new ChessPiece(ChessPieceType.QUEEN, Color.WHITE), 0, 3);
         //Posizione il re bianco
-        this.setPiece(new PieceChess(PieceChessType.KING, Color.WHITE), 0, 4);
+        this.setPiece(new ChessPiece(ChessPieceType.KING, Color.WHITE), 0, 4);
     }
 
     /**
@@ -158,8 +158,8 @@ public class ChessBoard implements Board {
     private void setupPawns() {
         //Posizione i pedoni bianchi e neri
         for(int i = 0; i < 8; i++) {
-            this.setPiece(new PieceChess(PieceChessType.PAWN, Color.WHITE), 1, i);
-            this.setPiece(new PieceChess(PieceChessType.PAWN, Color.BLACK), 6, i);
+            this.setPiece(new ChessPiece(ChessPieceType.PAWN, Color.WHITE), 1, i);
+            this.setPiece(new ChessPiece(ChessPieceType.PAWN, Color.BLACK), 6, i);
         }
     }
 

@@ -22,43 +22,43 @@ public class ChessGame extends Game {
     }
 
     @Override
-    protected boolean validator(PieceChess pieceChess, int x, int y) {
-        return switch (pieceChess.getType()) {
-            case KING -> kingValidator(pieceChess, x, y);
-            case QUEEN -> queenValidator(pieceChess, x, y);
-            case ROOK -> rookValidator(pieceChess, x, y);
-            case BISHOP -> bishopValidator(pieceChess, x, y);
-            case KNIGHT -> knightValidator(pieceChess, x, y);
-            case PAWN -> pawnValidator(pieceChess, x, y);
+    protected boolean validator(ChessPiece chessPiece, int x, int y) {
+        return switch (chessPiece.getType()) {
+            case KING -> kingValidator(chessPiece, x, y);
+            case QUEEN -> queenValidator(chessPiece, x, y);
+            case ROOK -> rookValidator(chessPiece, x, y);
+            case BISHOP -> bishopValidator(chessPiece, x, y);
+            case KNIGHT -> knightValidator(chessPiece, x, y);
+            case PAWN -> pawnValidator(chessPiece, x, y);
         };
     }
 
-    private boolean pawnValidator(PieceChess pieceChess, int x, int y) {
+    private boolean pawnValidator(ChessPiece chessPiece, int x, int y) {
         //TODO: implement
         return false;
     }
 
-    private boolean knightValidator(PieceChess pieceChess, int x, int y) {
+    private boolean knightValidator(ChessPiece chessPiece, int x, int y) {
         //TODO: implement
         return false;
     }
 
-    private boolean bishopValidator(PieceChess pieceChess, int x, int y) {
+    private boolean bishopValidator(ChessPiece chessPiece, int x, int y) {
         //TODO: implement
         return false;
     }
 
-    private boolean rookValidator(PieceChess pieceChess, int x, int y) {
+    private boolean rookValidator(ChessPiece chessPiece, int x, int y) {
         //TODO: implement
         return false;
     }
 
-    private boolean queenValidator(PieceChess pieceChess, int x, int y) {
+    private boolean queenValidator(ChessPiece chessPiece, int x, int y) {
         //TODO: implement
         return false;
     }
 
-    private boolean kingValidator(PieceChess pieceChess, int x, int y) {
+    private boolean kingValidator(ChessPiece chessPiece, int x, int y) {
         //TODO: implement
         return false;
     }
