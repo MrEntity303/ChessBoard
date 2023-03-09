@@ -1,5 +1,18 @@
 package it.unicam.cs.pa.games;
 
 public enum Color {
-    WHITE, BLACK
+    WHITE(1), BLACK(-1);
+
+    private final int value;
+
+    Color(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+    public Color getOppositeColor(){
+        return this == WHITE ? BLACK : WHITE;
+    }
 }
