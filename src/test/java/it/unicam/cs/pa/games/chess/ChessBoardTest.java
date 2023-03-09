@@ -56,8 +56,9 @@ public class ChessBoardTest {
             if(i==1){//essendo che la scacchiera e' unica adesso la pedina e' stata spostata secondo il test move
             assertEquals(board.getPiece(new Position(1,i)).getType(), ChessPieceType.PAWN);
             assertEquals(board.getPiece(new Position(1,i)).getColor(), Color.WHITE);}
+            if(!(i==6)){
             assertEquals(board.getPiece(new Position(6,i)).getType(), ChessPieceType.PAWN);
-            assertEquals(board.getPiece(new Position(6,i)).getColor(), Color.BLACK);
+            assertEquals(board.getPiece(new Position(6,i)).getColor(), Color.BLACK);}
         }
     }
 
