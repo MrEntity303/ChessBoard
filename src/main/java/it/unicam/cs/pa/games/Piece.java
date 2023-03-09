@@ -18,8 +18,7 @@ public interface Piece<T> {
     Color getColor();
     /**
      * Add a move to a list<Move> of the piece
-     *      @param origin the origin of the move
-     *      @param destination the destination of the move
+     *      @param move the move to add
      **/
     void addMove(Move move);
 
