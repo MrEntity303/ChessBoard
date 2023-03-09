@@ -2,13 +2,17 @@ package it.unicam.cs.pa.games.chess;
 
 import it.unicam.cs.pa.games.Board;
 import it.unicam.cs.pa.games.Color;
-import it.unicam.cs.pa.games.PieceInterface;
+import it.unicam.cs.pa.games.Piece;
 import it.unicam.cs.pa.games.Position;
 
 import java.util.ArrayList;
-public class ChessBoard implements Board {
-    private final ArrayList<ArrayList<ChessPiece>> board;
+import java.util.Optional;
 
+public class ChessBoard implements Board {
+    private static ChessBoard instance;
+    private final ArrayList<ArrayList<ChessPiece>> board;
+    private ArrayList<ChessPiece> observers = new ArrayList<>();
+    //region Constructors
     /**
      * Create a new ChessBoard
      *      @param width the width of the board
@@ -26,19 +30,28 @@ public class ChessBoard implements Board {
         	}
         }
     }
-    public ChessBoard(){
-        this(8, 8);
-        this.setupBoard();
-    }
 
     /**
-     * Set up the board with the pieces in the correct position
+     * Create a new ChessBoard
      **/
-    private void setupBoard() {
-        this.setupBlackPieces();
-        this.setupWhitePieces();
-        this.setupPawns();
+    private ChessBoard(){
+        this(8, 8);
+        this.setupBoard();
+        this.createListObservers();
     }
+
+    public static ChessBoard getInstance() {
+        if (instance == null) {
+            instance = new ChessBoard(8, 8);
+            instance.setupBoard();
+            instance.createListObservers();
+            instance.notifyObservers();
+        }
+        return instance;
+    }
+    //endregion
+
+    //region Methods ChessBoard
 
     /**
      * Get the width of the board
@@ -64,7 +77,8 @@ public class ChessBoard implements Board {
      * @param position the position where to set the piece
      **/
     @Override
-    public <T> void setPiece(PieceInterface<T> piece, Position position) {this.board.get(position.x()).set(position.y(), (ChessPiece) piece);
+    public <T> void setPiece(Piece<T> piece, Position position) {
+        this.board.get(position.x()).set(position.y(), (ChessPiece) piece);
     }
 
     /**
@@ -73,8 +87,17 @@ public class ChessBoard implements Board {
      *      @return the piece in the specified position
      **/
     @Override
-    public ChessPiece getPiece(Position position) {return this.board.get(position.x()).get(position.y());
-    }
+    public ChessPiece getPiece(Position position) {
+
+        return this.board.get(position.x()).get(position.y());}
+    /**
+     * Get the piece in the specified position
+     *      @param x the x coordinate
+     *      @param y the y coordinate
+     *      @return the piece in the specified position
+     **/
+    @Override
+    public ChessPiece getPiece(int x, int y) {return this.board.get(x).get(y);}
 
     /**
      * Remove the piece in the specified position
@@ -92,6 +115,49 @@ public class ChessBoard implements Board {
     public boolean isFree(Position position){
         return this.board.get(position.x()).get(position.y()) == null;
     }
+    /**
+     * Check if the specified position is free
+     *      @param x the x coordinate
+     *      @param y the y coordinate
+     *      @return true if the position is free, false otherwise
+     **/
+    @Override
+    public boolean isFree(int x, int y){
+        return this.board.get(x).get(y) == null;
+    }
+
+    /**
+     * Check if the specified position is valid
+     *      @param piece the position
+     *      @return <Position> if the position is valid, <null> otherwise
+     **/
+    @Override
+    public Position getPosition(Piece<?> piece)
+    {
+        for(int i = 0; i < this.getWight(); i++) {
+            if(this.board.get(i).contains((ChessPiece) piece))
+                return new Position(i, this.board.get(i).indexOf(piece));
+        }
+        return null;
+    }
+    @Override
+    public boolean onBoard(Position position){
+        return position.x() >= 0 && position.x() < this.getWight() && position.y() >= 0 && position.y() < this.getHeight();
+    }
+
+//    /**
+//     * Check if the specified position is valid
+//     *      @param piece the position
+//     *      @return <Position> if the position is valid, <null> otherwise
+//     **/
+////    @Override
+////    public Position getPosition(ChessPiece piece) {
+////        for(int i = 0; i < this.getWight(); i++) {
+////            if(this.board.get(i).contains(piece))
+////                return new Position(i, this.board.get(i).indexOf(piece));
+////        }
+////        return null;
+////    }
 
     /**
      * Move a piece from the origin position to the destination position
@@ -101,10 +167,88 @@ public class ChessBoard implements Board {
     @Override
     public void move(Position origin, Position destination) {
     	ChessPiece piece = this.getPiece(origin);
+        	if(piece == null) {
+        		System.err.println("No piece in the origin position");
+        		return;
+        	}
+        Optional<ChessMove> moveFromList = piece.getList().stream().filter(move -> move.getDestination().equals(destination)).findFirst();
+        if(moveFromList.isEmpty()){
+            System.err.println("Invalid move");
+            return;
+        }
+        if(moveFromList.get().getIsCapture()){
+            this.removePiece(destination);
+            this.removeObserver(this.getPiece(destination));
+        }
+
+        //TODO: check if the move is valid
     	this.removePiece(origin);
     	this.setPiece(piece, destination);
+        this.notifyObservers();
+    }
+        public void resetBoard() {//TODO: da rivedere per i test
+    	this.board.clear();
+    	for(int i = 0; i < this.getWight(); i++) {
+    		this.board.add(new ArrayList<>());
+    		for(int j = 0; j < this.getHeight(); j++) {
+    			this.board.get(i).add(null);
+    		}
+    	}
+    	this.setupBoard();
+    	this.createListObservers();
+    }
+    //endregion
+
+    //region Methods Observer
+    /**
+     * Add an observer to the board
+     *      @param observer the observer to add
+     **/
+    public void addObserver(ChessPiece observer) {
+        this.observers.add(observer);
     }
 
+    /**
+     * Remove an observer from the board
+     *      @param observer the observer to remove
+     **/
+    public void removeObserver(ChessPiece observer) {
+        this.observers.remove(observer);
+    }
+
+    /**
+     * Notify the observers that a piece has been moved
+     **/
+    private void notifyObservers() {
+        for (ChessPiece observer : this.observers) {
+            observer.update();
+        }
+    }
+
+    /**
+     * Create list observers of the board
+     *      Add the observers of the board
+     **/
+    public void createListObservers() {
+        	for(int i = 0; i < this.getWight(); i++) {
+        		for(int j = 0; j < this.getHeight(); j++) {
+        			if(this.getPiece(new Position(i, j)) != null) {
+        				this.addObserver(this.getPiece(new Position(i, j)));
+        			}
+        		}
+        	}
+    }
+    //endregion
+
+    //region SetupPieces
+    /**
+     * Set up the board with the pieces in the correct position
+     **/
+    private void setupBoard() {
+        this.setupBlackPieces();
+        this.setupWhitePieces();
+        this.setupPawns();
+    }
 
     /**
      * Set up the black pieces in the correct position
@@ -154,5 +298,6 @@ public class ChessBoard implements Board {
             this.setPiece(new ChessPiece(ChessPieceType.PAWN, Color.BLACK), new Position(6,i));//6, i);
         }
     }
+    //endregion
 
 }
