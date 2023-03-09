@@ -6,12 +6,13 @@ import it.unicam.cs.pa.games.Piece;
 import it.unicam.cs.pa.games.Position;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class ChessBoard implements Board {
     private static ChessBoard instance;
-    private final ArrayList<ArrayList<ChessPiece>> board;
-    private ArrayList<ChessPiece> observers = new ArrayList<>();
+    private  ArrayList<ArrayList<ChessPiece>> board;
+    private  final ArrayList<ChessPiece> observers = new ArrayList<>();
     //region Constructors
     /**
      * Create a new ChessBoard
@@ -34,15 +35,15 @@ public class ChessBoard implements Board {
     /**
      * Create a new ChessBoard
      **/
-    private ChessBoard(){
-        this(8, 8);
-        this.setupBoard();
-        this.createListObservers();
-    }
+//    private ChessBoard(){
+//        this(8, 8);
+//        this.setupBoard();
+//        this.createListObservers();
+//    }
 
     public static ChessBoard getInstance() {
         if (instance == null) {
-            instance = new ChessBoard(8, 8);
+            instance = new ChessBoard(8,8);
             instance.setupBoard();
             instance.createListObservers();
             instance.notifyObservers();
@@ -177,8 +178,9 @@ public class ChessBoard implements Board {
             return;
         }
         if(moveFromList.get().getIsCapture()){
-            this.removePiece(destination);
             this.removeObserver(this.getPiece(destination));
+            this.removePiece(destination);
+
         }
 
         //TODO: check if the move is valid
@@ -188,14 +190,18 @@ public class ChessBoard implements Board {
     }
         public void resetBoard() {//TODO: da rivedere per i test
     	this.board.clear();
-    	for(int i = 0; i < this.getWight(); i++) {
+        this.observers.clear();
+        this.board = new ArrayList<>();
+    	for(int i = 0; i < 8; i++) {
     		this.board.add(new ArrayList<>());
-    		for(int j = 0; j < this.getHeight(); j++) {
+    		for(int j = 0; j < 8; j++) {
     			this.board.get(i).add(null);
     		}
     	}
     	this.setupBoard();
-    	this.createListObservers();
+        this.createListObservers();
+        this.notifyObservers();
+
     }
     //endregion
 
@@ -214,6 +220,12 @@ public class ChessBoard implements Board {
      **/
     public void removeObserver(ChessPiece observer) {
         this.observers.remove(observer);
+    }
+    /**
+     * Get the list of observers
+     */
+    public List<ChessPiece> getObservers() {
+        return this.observers;
     }
 
     /**
@@ -256,7 +268,7 @@ public class ChessBoard implements Board {
     private void setupBlackPieces() {
         //Posizione le torri nere
         this.setPiece(new ChessPiece(ChessPieceType.ROOK, Color.BLACK), new Position(7,0));//7, 0);
-        this.setPiece(new ChessPiece(ChessPieceType.ROOK, Color.BLACK), new Position(7,7));
+        this.setPiece(new ChessPiece(ChessPieceType.ROOK, Color.BLACK), new Position(7,7));//7, 7);
         //Posizione i cavalli neri
         this.setPiece(new ChessPiece(ChessPieceType.KNIGHT, Color.BLACK), new Position(7,1));//7, 1);
         this.setPiece(new ChessPiece(ChessPieceType.KNIGHT, Color.BLACK), new Position(7, 6));//7, 6);
