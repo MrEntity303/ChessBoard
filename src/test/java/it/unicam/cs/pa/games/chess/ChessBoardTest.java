@@ -102,6 +102,23 @@ public class ChessBoardTest {
         assertEquals(board.getPiece(new Position(4, 6)).getColor(), Color.WHITE);
         assertTrue(board.isFree(new Position(1, 7)));
     }
+    @Test
+    public void moveIsPromotionPawn(){
+        ChessBoard board = ChessBoard.getInstance();
+        board.resetBoard();
+        board.removeObserver(board.getPiece(new Position(0, 0)));
+        board.removeObserver(board.getPiece(new Position(1, 0)));
+        board.removePiece(new Position(0, 0));
+        board.removePiece(new Position(1, 0));
+        board.move(new Position(6, 0), new Position(4, 0));
+        board.move(new Position(4, 0), new Position(3, 0));
+        board.move(new Position(3, 0), new Position(2, 0));
+        board.move(new Position(2, 0), new Position(1, 0));
+        //assertTrue(board.getPiece(new Position(0, 1)).getList().stream().findFirst());
+        //assertTrue(board.getPiece(new Position(1, 0)).getList().stream().anyMatch(move -> move != null && move.getDestination().x() == 0 && move.getIsPromotion()));
+        board.move(new Position(1, 0), new Position(0, 0));
+
+    }
 
 
 
