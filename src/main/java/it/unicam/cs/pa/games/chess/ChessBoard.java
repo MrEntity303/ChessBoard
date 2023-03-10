@@ -1,5 +1,7 @@
 package it.unicam.cs.pa.games.chess;
 
+import it.unicam.cs.pa.cli.CliPromotionObserver;
+import it.unicam.cs.pa.cli.PromotionObserver;
 import it.unicam.cs.pa.games.Board;
 import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.Piece;
@@ -13,6 +15,7 @@ public class ChessBoard implements Board {
     private static ChessBoard instance;
     private  ArrayList<ArrayList<ChessPiece>> board;
     private  final ArrayList<ChessPiece> observers = new ArrayList<>();
+    private PromotionObserver promotionObserver;
     //region Constructors
     /**
      * Create a new ChessBoard
@@ -53,6 +56,9 @@ public class ChessBoard implements Board {
     //endregion
 
     //region Methods ChessBoard
+    public void setPromotionObserver(PromotionObserver promotionObserver) {
+        this.promotionObserver = promotionObserver;
+    }
 
     /**
      * Get the width of the board
@@ -167,42 +173,69 @@ public class ChessBoard implements Board {
      **/
     @Override
     public void move(Position origin, Position destination) {
-    	ChessPiece piece = this.getPiece(origin);
-        	if(piece == null) {
-        		System.err.println("No piece in the origin position");
-        		return;
-        	}
+        ChessPiece piece = this.getPiece(origin);
+        if (piece == null) {
+            System.err.println("No piece in the origin position");
+            return;
+        }
         Optional<ChessMove> moveFromList = piece.getList().stream().filter(move -> move.getDestination().equals(destination)).findFirst();
-        if(moveFromList.isEmpty()){
+        if (moveFromList.isEmpty()) {
             System.err.println("Invalid move");
             return;
         }
-        if(moveFromList.get().getIsCapture()){
+        if (moveFromList.get().getIsCapture()) {
             this.removeObserver(this.getPiece(destination));
             this.removePiece(destination);
 
         }
-
-        //TODO: check if the move is valid
-    	this.removePiece(origin);
-    	this.setPiece(piece, destination);
-        this.notifyObservers();
+        if (moveFromList.get().getIsPromotion()) {
+            if (moveFromList.get().getIsPromotion()) {
+                if (piece.getType() == ChessPieceType.PAWN) {
+                    // Notificare l'eventuale observer di promozione
+                    if (this.promotionObserver != null) {
+                        ChessPieceType promotedTo = this.promotionObserver.handlePromotion(piece.getColor());
+                        // Rimuovere il pedone dalla scacchiera e sostituirlo con il nuovo pezzo promosso
+                        ChessPiece promotedPiece = switch (promotedTo) {
+                            case KNIGHT -> new ChessPiece(ChessPieceType.KNIGHT, piece.getColor());
+                            case BISHOP -> new ChessPiece(ChessPieceType.BISHOP, piece.getColor());
+                            case ROOK -> new ChessPiece(ChessPieceType.ROOK, piece.getColor());
+                            case QUEEN -> new ChessPiece(ChessPieceType.QUEEN, piece.getColor());
+                            default -> null;
+                        };
+                        this.removeObserver(piece);
+                        this.removePiece(origin);
+                        this.setPiece(promotedPiece, destination);
+                        this.notifyObservers();
+                    } else {
+                        System.err.println("La promozione può essere effettuata solo se è presente un PromotionObserver");
+                    }
+                } else {
+                    System.err.println("La promozione può essere effettuata solo da un pedone");
+                }
+                return;
+//            this.removeObserver(this.getPiece(origin));
+//            this.removePiece(origin);//TODO: completare l'implementazione
+            }
+            this.removePiece(origin);
+            this.setPiece(piece, destination);
+            this.notifyObservers();
+        }
     }
         public void resetBoard() {//TODO: da rivedere per i test
-    	this.board.clear();
-        this.observers.clear();
-        this.board = new ArrayList<>();
-    	for(int i = 0; i < 8; i++) {
-    		this.board.add(new ArrayList<>());
-    		for(int j = 0; j < 8; j++) {
-    			this.board.get(i).add(null);
-    		}
-    	}
-    	this.setupBoard();
-        this.createListObservers();
-        this.notifyObservers();
+            this.board.clear();
+            this.observers.clear();
+            this.board = new ArrayList<>();
+            for (int i = 0; i < 8; i++) {
+                this.board.add(new ArrayList<>());
+                for (int j = 0; j < 8; j++) {
+                    this.board.get(i).add(null);
+                }
+            }
+            this.setupBoard();
+            this.createListObservers();
+            this.notifyObservers();
 
-    }
+        }
     //endregion
 
     //region Methods Observer

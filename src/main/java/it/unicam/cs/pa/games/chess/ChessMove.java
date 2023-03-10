@@ -23,8 +23,17 @@ public class ChessMove extends Move {
         if(!ChessBoard.getInstance().isFree(this.getDestination()) && ChessBoard.getInstance().getPiece(this.getDestination()).getColor().equals(ChessBoard.getInstance().getPiece(this.getOrigin()).getColor()))
             return null;
         //Controlla se la mossa e' una cattura
-        if(ChessBoard.getInstance().getPiece(this.getDestination()) != null && !ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(ChessBoard.getInstance().getPiece(this.getOrigin()).getColor()))
+        if(ChessBoard.getInstance().getPiece(this.getDestination()) != null && ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(ChessBoard.getInstance().getPiece(this.getOrigin()).getColor()))
             this.isCapture = true;
+        //Controlla se la mossa e' una promozione
+        if(ChessBoard.getInstance().getPiece(getOrigin()) != null
+                && ChessBoard.getInstance().getPiece(getOrigin()).getType() == ChessPieceType.PAWN
+                && (ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(Color.WHITE) ? this.getDestination().x() == 7 : this.getDestination().x() == 0))
+            this.isPromotion = true;
+//        if(ChessBoard.getInstance().getPiece(getOrigin()).getType() == ChessPieceType.PAWN && ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(Color.WHITE) ? this.getDestination().x() == 7 : this.getDestination().x() == 0)
+//            this.isPromotion = true;
+        //Controlla se la mossa e' un en passant
+
 //        ChessBoard.getInstance().getPiece(this.getOrigin()).getList().stream().filter(p->p.getDestination().equals(this.getDestination())).findFirst().ifPresent(p->{
 //            p.get
 //            this.isCapture = true;});
