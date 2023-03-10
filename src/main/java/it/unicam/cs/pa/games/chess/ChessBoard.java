@@ -96,9 +96,7 @@ public class ChessBoard implements Board {
      *      @return the piece in the specified position
      **/
     @Override
-    public ChessPiece getPiece(Position position) {
-
-        return this.board.get(position.x()).get(position.y());}
+    public ChessPiece getPiece(Position position) {return this.board.get(position.x()).get(position.y());}
     /**
      * Get the piece in the specified position
      *      @param x the x coordinate
@@ -168,31 +166,61 @@ public class ChessBoard implements Board {
     @Override
     public void move(Position origin, Position destination) {
         ChessPiece piece = this.getPiece(origin);
-        if (piece == null) {
-            System.err.println("No piece in the origin position");
-            return;
-        }
+        if(piece== null) return;
+
         Optional<ChessMove> moveFromList = piece.getList().stream().filter(move -> move.getDestination().equals(destination)).findFirst();
-        if (moveFromList.isEmpty()) {
-            System.err.println("Invalid move");
-            return;
+        if (moveFromList.isEmpty()) return;
+
+        this.executeCapture(destination, moveFromList.get());
+
+        if(this.executePromotion(origin, destination, piece, moveFromList.get())) return;
+
+        this.swapPiece(piece, origin, destination);
         }
-        if (moveFromList.get().getIsCapture()) {
-            this.removeObserver(this.getPiece(destination));
-            this.removePiece(destination);
-        }
-        if (moveFromList.get().getIsPromotion()) {
-            this.removePiece(origin);
-            this.setPiece(piece, destination);
-            ChessBoard.getInstance().getPiece(destination).setType(this.getPromotionObserver().handlePromotion(piece.getColor()));
-            this.notifyObservers();
-            return;
-            }
+
+        /**
+         * Move a piece from the origin position to the destination position
+         *      @param origin the origin position
+         *      @param destination the destination position
+         **/
+        private void swapPiece(ChessPiece piece,Position origin, Position destination){
             this.removePiece(origin);
             this.setPiece(piece, destination);
             this.notifyObservers();
         }
 
+        /**
+         * Execute the capture of a piece
+         *      @param destination the origin position
+         *      @param move the destination position
+         **/
+        private void executeCapture(Position destination, ChessMove move){
+            if (move.getIsCapture()) {
+                this.removeObserver(this.getPiece(destination));
+                this.removePiece(destination);
+            }
+        }
+
+        /**
+         * Execute the promotion of a piece
+         *      @param origin the origin position
+         *      @param destination the destination position
+         *      @param piece the piece to promote
+         *      @param move the move to execute
+         **/
+        private boolean executePromotion(Position origin, Position destination, ChessPiece piece, ChessMove move){
+            if (move.getIsPromotion()) {
+                this.removePiece(origin);
+                this.setPiece(piece, destination);
+                ChessBoard.getInstance().getPiece(destination).setType(this.getPromotionObserver().handlePromotion(piece.getColor()));
+                this.notifyObservers();
+            }
+            return false;
+        }
+
+        /**
+         * Reset the board
+         **/
         public void resetBoard() {//TODO: da rivedere per i test
             this.board.clear();
             this.observers.clear();

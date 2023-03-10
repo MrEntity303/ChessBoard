@@ -121,7 +121,6 @@ public class ChessBoardTest {
         board.move(new Position(3, 0), new Position(2, 0));
         board.move(new Position(2, 0), new Position(1, 0));
         board.move(new Position(1, 0), new Position(0, 0));
-        ChessBoard.getInstance().setPromotionObserver(new CliPromotionObserver(scanner));
         assertNotNull(board.getPiece(new Position(0, 0)));
         assertEquals(board.getPiece(new Position(0, 0)).getType(), ChessPieceType.QUEEN);
     }

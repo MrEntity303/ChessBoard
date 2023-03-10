@@ -17,43 +17,37 @@ public class ChessMove extends Move {
 
     @Override
     public ChessMove isValid() {
-        if(this.getDestination().x()<0|| this.getDestination().x()>7 || this.getDestination().y()<0 || this.getDestination().y()>7)
+        //Controlla se la destinazione e' sulla scacchiera
+        if(!ChessBoard.getInstance().onBoard(this.getDestination()))
             return null;
-        //Controlla se la mossa e' valida
-        if(!ChessBoard.getInstance().isFree(this.getDestination()) && ChessBoard.getInstance().getPiece(this.getDestination()).getColor().equals(ChessBoard.getInstance().getPiece(this.getOrigin()).getColor()))
+        //Controlla se la lo spazio di destinazione e' occupato, e se e' occupato da una pedina dello stesso colore
+        if(!ChessBoard.getInstance().isFree(this.getDestination())
+                && ChessBoard.getInstance().getPiece(this.getDestination()).getColor().equals(ChessBoard.getInstance().getPiece(this.getOrigin()).getColor()))
             return null;
         //Controlla se la mossa e' una cattura
-        if(ChessBoard.getInstance().getPiece(this.getDestination()) != null && ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(ChessBoard.getInstance().getPiece(this.getOrigin()).getColor()))
-            this.isCapture = true;
+        this.setIsCapture();
         //Controlla se la mossa e' una promozione
-        if(ChessBoard.getInstance().getPiece(getOrigin()) != null
-                && ChessBoard.getInstance().getPiece(getOrigin()).getType() == ChessPieceType.PAWN
-                && (ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(Color.WHITE) ? this.getDestination().x() == 7 : this.getDestination().x() == 0))
-            this.isPromotion = true;
-//        if(ChessBoard.getInstance().getPiece(getOrigin()).getType() == ChessPieceType.PAWN && ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(Color.WHITE) ? this.getDestination().x() == 7 : this.getDestination().x() == 0)
-//            this.isPromotion = true;
-        //Controlla se la mossa e' un en passant
+        this.setIsPromotion();
 
-//        ChessBoard.getInstance().getPiece(this.getOrigin()).getList().stream().filter(p->p.getDestination().equals(this.getDestination())).findFirst().ifPresent(p->{
-//            p.get
-//            this.isCapture = true;});
         return this;
     }
     public boolean getIsCapture(){return this.isCapture;}
     public boolean getIsPromotion(){return this.isPromotion;}
     public boolean getIsEnPassant(){return this.isEnPassant;}
     public boolean getIsCastling(){return this.isCastling;}
-}
 
-////        //Controlla se la mossa e' una cattura
-////        ChessBoard.getInstance().getPiece(this.getOrigin()).getList().stream().filter(p->p.getDestination().equals(this.getDestination())).findFirst().ifPresent(p->{
-////            this.isCapture = true;});
-////        //Controlla se la mossa e' una promozione
-////        if(ChessBoard.getInstance().getPiece(getOrigin()).getType() == ChessPieceType.PAWN &&
-////                ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(Color.WHITE) ? this.getDestination().x() == 7 : this.getDestination().x() == 0)
-////            this.isPromotion = true;
-//        //Controlla se la mossa e' un en passant
-////        if(ChessBoard.getInstance().getPiece(getOrigin()).getType() == ChessPieceType.PAWN &&
-//
-//        return this;
-//        //TODO: implement (deve controllare se la mossa e valida ed il tipo di mossa)
+    public void setIsCapture(){
+        if(ChessBoard.getInstance().getPiece(this.getDestination()) != null
+                && ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(ChessBoard.getInstance().getPiece(this.getOrigin()).getColor()))
+            this.isCapture = true;
+    }
+    public void setIsPromotion(){
+        if(ChessBoard.getInstance().getPiece(getOrigin()) != null
+                && ChessBoard.getInstance().getPiece(getOrigin()).getType() == ChessPieceType.PAWN
+                && (ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(Color.WHITE) ? this.getDestination().x() == 7 : this.getDestination().x() == 0))
+            this.isPromotion = true;
+    }
+}
+//TODO: implement (deve controllare se la mossa e valida ed il tipo di mossa)
+//if(this.getDestination().x()<0|| this.getDestination().x()>7 || this.getDestination().y()<0 || this.getDestination().y()>7)
+

@@ -11,7 +11,7 @@ public class CliPromotionObserver implements PromotionObserver{
         }
     @Override
         public ChessPieceType handlePromotion(Color color) {
-            System.out.println("Il tuo pedone e' arrivato all'ultima traversa! Scegli il tipo di pezzo in cui promuoverlo (Cavallo, Alfiere, Torre, Regina):");
+            System.out.println("Your pawn has reached the last rank! Choose the type of piece to promote to (Knight, Bishop, Rook, Queen):");
 
             while (true) {
                 String input = scanner.nextLine();
@@ -29,7 +29,7 @@ public class CliPromotionObserver implements PromotionObserver{
                         return ChessPieceType.QUEEN;
                     }
                     default ->
-                            System.err.println("Input non valido. Scegli il tipo di pezzo in cui promuoverlo (Cavallo, Alfiere, Torre, Regina):");
+                            System.err.println("Invalid input. Choose the type of piece to promote to (Knight, Bishop, Rook, Queen):");
                 }
             }
         }
