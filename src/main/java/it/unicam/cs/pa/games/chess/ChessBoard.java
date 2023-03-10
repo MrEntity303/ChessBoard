@@ -38,15 +38,13 @@ public class ChessBoard implements Board {
     /**
      * Create a new ChessBoard
      **/
-//    private ChessBoard(){
-//        this(8, 8);
-//        this.setupBoard();
-//        this.createListObservers();
-//    }
+    private ChessBoard(){
+        this(8, 8);
+    }
 
     public static ChessBoard getInstance() {
         if (instance == null) {
-            instance = new ChessBoard(8,8);
+            instance = new ChessBoard();
             instance.setupBoard();
             instance.createListObservers();
             instance.notifyObservers();
@@ -56,8 +54,12 @@ public class ChessBoard implements Board {
     //endregion
 
     //region Methods ChessBoard
-    public void setPromotionObserver(PromotionObserver promotionObserver) {
+    public void setPromotionObserver(CliPromotionObserver promotionObserver) {
         this.promotionObserver = promotionObserver;
+    }
+
+    public PromotionObserver getPromotionObserver() {
+        return promotionObserver;
     }
 
     /**
@@ -147,24 +149,16 @@ public class ChessBoard implements Board {
         }
         return null;
     }
+
+    /**
+     * Check if the specified position is on the board
+     *      @param position the position
+     *      @return true if the position is on the board, false otherwise
+     **/
     @Override
     public boolean onBoard(Position position){
         return position.x() >= 0 && position.x() < this.getWight() && position.y() >= 0 && position.y() < this.getHeight();
     }
-
-//    /**
-//     * Check if the specified position is valid
-//     *      @param piece the position
-//     *      @return <Position> if the position is valid, <null> otherwise
-//     **/
-////    @Override
-////    public Position getPosition(ChessPiece piece) {
-////        for(int i = 0; i < this.getWight(); i++) {
-////            if(this.board.get(i).contains(piece))
-////                return new Position(i, this.board.get(i).indexOf(piece));
-////        }
-////        return null;
-////    }
 
     /**
      * Move a piece from the origin position to the destination position
@@ -186,41 +180,19 @@ public class ChessBoard implements Board {
         if (moveFromList.get().getIsCapture()) {
             this.removeObserver(this.getPiece(destination));
             this.removePiece(destination);
-
         }
         if (moveFromList.get().getIsPromotion()) {
-            if (moveFromList.get().getIsPromotion()) {
-                if (piece.getType() == ChessPieceType.PAWN) {
-                    // Notificare l'eventuale observer di promozione
-                    if (this.promotionObserver != null) {
-                        ChessPieceType promotedTo = this.promotionObserver.handlePromotion(piece.getColor());
-                        // Rimuovere il pedone dalla scacchiera e sostituirlo con il nuovo pezzo promosso
-                        ChessPiece promotedPiece = switch (promotedTo) {
-                            case KNIGHT -> new ChessPiece(ChessPieceType.KNIGHT, piece.getColor());
-                            case BISHOP -> new ChessPiece(ChessPieceType.BISHOP, piece.getColor());
-                            case ROOK -> new ChessPiece(ChessPieceType.ROOK, piece.getColor());
-                            case QUEEN -> new ChessPiece(ChessPieceType.QUEEN, piece.getColor());
-                            default -> null;
-                        };
-                        this.removeObserver(piece);
-                        this.removePiece(origin);
-                        this.setPiece(promotedPiece, destination);
-                        this.notifyObservers();
-                    } else {
-                        System.err.println("La promozione può essere effettuata solo se è presente un PromotionObserver");
-                    }
-                } else {
-                    System.err.println("La promozione può essere effettuata solo da un pedone");
-                }
-                return;
-//            this.removeObserver(this.getPiece(origin));
-//            this.removePiece(origin);//TODO: completare l'implementazione
+            this.removePiece(origin);
+            this.setPiece(piece, destination);
+            ChessBoard.getInstance().getPiece(destination).setType(this.getPromotionObserver().handlePromotion(piece.getColor()));
+            this.notifyObservers();
+            return;
             }
             this.removePiece(origin);
             this.setPiece(piece, destination);
             this.notifyObservers();
         }
-    }
+
         public void resetBoard() {//TODO: da rivedere per i test
             this.board.clear();
             this.observers.clear();

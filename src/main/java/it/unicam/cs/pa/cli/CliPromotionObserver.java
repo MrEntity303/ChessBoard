@@ -9,10 +9,9 @@ public class CliPromotionObserver implements PromotionObserver{
         public CliPromotionObserver(Scanner scanner) {
             this.scanner = scanner;
         }
-
-        @Override
+    @Override
         public ChessPieceType handlePromotion(Color color) {
-            System.out.println("Il tuo pedone è arrivato all'ultima traversa! Scegli il tipo di pezzo in cui promuoverlo (Cavallo, Alfiere, Torre, Regina):");
+            System.out.println("Il tuo pedone e' arrivato all'ultima traversa! Scegli il tipo di pezzo in cui promuoverlo (Cavallo, Alfiere, Torre, Regina):");
 
             while (true) {
                 String input = scanner.nextLine();

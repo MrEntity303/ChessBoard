@@ -6,13 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChessPiece implements Piece<ChessPieceType>, Observer {
-    private final ChessPieceType type;
+    private ChessPieceType type;
     private final Color color;
     private List<ChessMove> moves = new ArrayList<>();
 
     public ChessPiece(ChessPieceType type, Color color) {
         this.type = type;
         this.color = color;
+    }
+    public void setType(ChessPieceType type) {
+        this.type = type;
     }
 
     @Override
@@ -27,19 +30,9 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
 
     @Override
     public void addMove(Move move) {
-        //ChessMove move = new ChessMove(origin, destination);
         if(move!=null)
             moves.add((ChessMove) move);
-        //return move;
     }
-
-//    @Override
-//    public void addMove(ChessMove move) {
-//        //ChessMove move = new ChessMove(origin, destination);
-//        moves.add(move);
-//        //return move;
-//    }
-
     @Override
     public List<ChessMove> getList() {
         return this.moves;
