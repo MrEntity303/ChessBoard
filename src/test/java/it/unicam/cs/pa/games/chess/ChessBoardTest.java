@@ -1,8 +1,13 @@
 package it.unicam.cs.pa.games.chess;
 
+import it.unicam.cs.pa.cli.CliPromotionObserver;
 import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.Position;
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +33,6 @@ public class ChessBoardTest {
         assertEquals(board.getPiece(new Position(0,4)).getType(), ChessPieceType.KING);
         assertEquals(board.getPiece(new Position(0,4)).getColor(), Color.WHITE);
     }
-
     @Test
     public void testBlackPiece() {
         ChessBoard board = ChessBoard.getInstance();
@@ -50,7 +54,6 @@ public class ChessBoardTest {
         assertEquals(board.getPiece(new Position(7,4)).getType(), ChessPieceType.KING);
         assertEquals(board.getPiece(new Position(7,4)).getColor(), Color.BLACK);
     }
-
     @Test
     public void testWhiteAndBlackPawn() {
         ChessBoard board = ChessBoard.getInstance();
@@ -62,14 +65,12 @@ public class ChessBoardTest {
             assertEquals(board.getPiece(new Position(6,i)).getColor(), Color.BLACK);
         }
     }
-
     @Test
     public void getWightAndHeight(){
         ChessBoard board = ChessBoard.getInstance();
         assertEquals(board.getWight(), 8);
         assertEquals(board.getHeight(), 8);
     }
-
     @Test
     public void testIsFree(){
         ChessBoard board = ChessBoard.getInstance();
@@ -79,7 +80,6 @@ public class ChessBoardTest {
         assertTrue(board.isFree(new Position(4, 4)));
         assertTrue(board.isFree(new Position(5, 5)));
     }
-
     @Test
     public void move(){
         ChessBoard board = ChessBoard.getInstance();
@@ -88,6 +88,8 @@ public class ChessBoardTest {
         board.move(new Position(6, 6), new Position(4, 6));
         assertEquals(board.getPiece(new Position(4, 6)).getType(), ChessPieceType.PAWN);
         assertEquals(board.getPiece(new Position(4, 6)).getColor(), Color.BLACK);
+        assertEquals(board.getPiece(new Position(3, 7)).getType(), ChessPieceType.PAWN);
+        assertEquals(board.getPiece(new Position(3, 7)).getColor(), Color.WHITE);
         assertTrue(board.isFree(new Position(1, 7)));
     }
     @Test
@@ -103,8 +105,12 @@ public class ChessBoardTest {
         assertTrue(board.isFree(new Position(1, 7)));
     }
     @Test
-    public void moveIsPromotionPawn(){
+    public void moveIsPromotionPawn() {
+        String inputString = "queen";
+        InputStream inputStream = new ByteArrayInputStream(inputString.getBytes());
+        Scanner scanner = new Scanner(inputStream);
         ChessBoard board = ChessBoard.getInstance();
+        board.setPromotionObserver(new CliPromotionObserver(scanner));
         board.resetBoard();
         board.removeObserver(board.getPiece(new Position(0, 0)));
         board.removeObserver(board.getPiece(new Position(1, 0)));
@@ -114,15 +120,20 @@ public class ChessBoardTest {
         board.move(new Position(4, 0), new Position(3, 0));
         board.move(new Position(3, 0), new Position(2, 0));
         board.move(new Position(2, 0), new Position(1, 0));
-        //assertTrue(board.getPiece(new Position(0, 1)).getList().stream().findFirst());
-        //assertTrue(board.getPiece(new Position(1, 0)).getList().stream().anyMatch(move -> move != null && move.getDestination().x() == 0 && move.getIsPromotion()));
         board.move(new Position(1, 0), new Position(0, 0));
-
+        ChessBoard.getInstance().setPromotionObserver(new CliPromotionObserver(scanner));
+        assertNotNull(board.getPiece(new Position(0, 0)));
+        assertEquals(board.getPiece(new Position(0, 0)).getType(), ChessPieceType.QUEEN);
     }
-
-
-
-
-
-
+    @Test
+    public void checkPawnIsBlock(){
+        ChessBoard board = ChessBoard.getInstance();
+        board.resetBoard();
+        board.move(new Position(1, 0), new Position(3, 0));
+        board.move(new Position(6, 0), new Position(4, 0));
+        assertTrue(board.isFree(new Position(2, 0)));
+        assertFalse(board.isFree(new Position(3, 0)));
+        assertTrue(board.isFree(new Position(5, 0)));
+        assertFalse(board.isFree(new Position(4, 0)));
+    }
 }
