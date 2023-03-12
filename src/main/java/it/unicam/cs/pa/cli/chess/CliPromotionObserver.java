@@ -1,12 +1,11 @@
-package it.unicam.cs.pa.cli;
+package it.unicam.cs.pa.cli.chess;
 import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.chess.ChessPieceType;
 
 import java.util.Scanner;
-public class CliPromotionObserver implements PromotionObserver{
-        private final Scanner scanner;
-
-        public CliPromotionObserver(Scanner scanner) {
+public class CliPromotionObserver implements PromotionObserver {
+    private final Scanner scanner;
+    public CliPromotionObserver(Scanner scanner) {
             this.scanner = scanner;
         }
     @Override

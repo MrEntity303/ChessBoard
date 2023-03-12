@@ -1,7 +1,7 @@
 package it.unicam.cs.pa.games.chess;
 
-import it.unicam.cs.pa.cli.CliPromotionObserver;
-import it.unicam.cs.pa.cli.PromotionObserver;
+import it.unicam.cs.pa.cli.chess.CliPromotionObserver;
+import it.unicam.cs.pa.cli.chess.PromotionObserver;
 import it.unicam.cs.pa.games.Board;
 import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.Piece;
@@ -62,6 +62,9 @@ public class ChessBoard implements Board {
         return promotionObserver;
     }
 
+    public ArrayList<ArrayList<ChessPiece>> getBoard() {
+        return board;
+    }
     /**
      * Get the width of the board
      *      @return the width of the board
@@ -136,7 +139,7 @@ public class ChessBoard implements Board {
     /**
      * Check if the specified position is valid
      *      @param piece the position
-     *      @return <Position> if the position is valid, <null> otherwise
+     *      @return Position> if the position is valid, null otherwise
      **/
     @Override
     public Position getPosition(Piece<?> piece)
@@ -164,18 +167,23 @@ public class ChessBoard implements Board {
      *      @param destination the destination position
      **/
     @Override
-    public void move(Position origin, Position destination) {
+    public boolean move(Position origin, Position destination, Color color) {
+        if(!ChessBoard.getInstance().onBoard(origin) && ChessBoard.getInstance().onBoard(destination)) return false;
+
         ChessPiece piece = this.getPiece(origin);
-        if(piece== null) return;
+        if(piece== null) return false;
+
+        if(piece.getColor() != color) return false;
 
         Optional<ChessMove> moveFromList = piece.getList().stream().filter(move -> move.getDestination().equals(destination)).findFirst();
-        if (moveFromList.isEmpty()) return;
+        if (moveFromList.isEmpty()) return false;
 
         this.executeCapture(destination, moveFromList.get());
 
-        if(this.executePromotion(origin, destination, piece, moveFromList.get())) return;
+        if(this.executePromotion(origin, destination, piece, moveFromList.get())) return true;
 
         this.swapPiece(piece, origin, destination);
+        return true;
         }
 
         /**

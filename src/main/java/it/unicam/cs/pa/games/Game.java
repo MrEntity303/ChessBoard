@@ -13,26 +13,23 @@ public abstract class Game {
             initialize();
             while (!endOfGame()) {
                 makeTurn();
+                countTurns++;
             }
             printResult();
         }
 
         //hook methods - possono essere ridefiniti dalle sottoclassi
         protected void initialize() {
-            //this.setCountTurns(0);
-            System.out.println("Inizializzazione del gioco");
+            System.out.println("Inizializzazione del gioco...");
         }
 
         protected abstract void makeTurn();
 
         protected boolean endOfGame() {
-            //this.setCountTurns(this.getCountTurns() + 1);
             return false;//TODO aggiungere condizione di fine gioco
         }
 
-    //protected abstract boolean validator(ChessPiece chesPiece, Position origin, Position destination);
-
     protected void printResult(){
-//        System.out.println("Il gioco è finito, turni passati: " + (this.getCountTurns()-1));
+        System.out.println("Il gioco è finito, turni passati: " + this.getCountTurns());
     }
 }

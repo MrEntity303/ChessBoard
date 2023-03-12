@@ -1,7 +1,5 @@
 package it.unicam.cs.pa.games;
 
-import it.unicam.cs.pa.games.chess.ChessMove;
-
 import java.util.List;
 
 public interface Piece<T> {

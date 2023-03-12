@@ -1,8 +1,6 @@
 package it.unicam.cs.pa.games;
 
-import it.unicam.cs.pa.games.chess.ChessPiece;
-
-public interface Board {
+public interface Board{
     /**
      * Get the width of the board
      * @return the width of the board
@@ -58,6 +56,6 @@ public interface Board {
      * @param origin the origin of the piece
      * @param destination the destination of the piece
      */
-    void move(Position origin, Position destination);
+    boolean move(Position origin, Position destination, Color color);
     boolean onBoard(Position position);
 }
