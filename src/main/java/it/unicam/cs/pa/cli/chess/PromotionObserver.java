@@ -1,4 +1,4 @@
-package it.unicam.cs.pa.cli;
+package it.unicam.cs.pa.cli.chess;
 
 import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.chess.ChessPieceType;
