@@ -24,6 +24,8 @@ public abstract class Game {
         }
 
         protected abstract void makeTurn();
+        
+        protected abstract void printBoard();
 
         protected boolean endOfGame() {
             return false;//TODO aggiungere condizione di fine gioco

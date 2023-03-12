@@ -5,6 +5,8 @@ import it.unicam.cs.pa.cli.chess.CliPromotionObserver;
 import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.Game;
 import it.unicam.cs.pa.players.chess.ChessPlayer;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ChessGame extends Game {
@@ -37,15 +39,35 @@ public class ChessGame extends Game {
     public void makeTurn() {
         for (ChessPlayer player:players) {
             System.out.println("Turn of Player " + player.getName());
-            //board.printBoard();
+            printBoard();
             while(!player.makeMove(cliMakeTurn.inputTurn())) {
                 System.out.println("Mossa non valida");
                 System.out.println("Turn of Player " + player.getName());
+                printBoard();
             }
             if(endOfGame())
                 break;
 
         }
+    }
+
+    @Override
+    protected void printBoard() {
+        System.out.println("Stato del gioco");
+        System.out.println("    a   b   c   d   e   f   g   h");
+        System.out.println("  +---+---+---+---+---+---+---+---+");
+        int rowNumber = 1;
+        for (ArrayList<ChessPiece> row : board.getBoard()) {
+            System.out.print(rowNumber + " | ");
+            for (ChessPiece piece : row)
+                if (piece != null)
+                    System.out.print(piece.getColor().equals(Color.WHITE) ? piece.getType().getValue() + " | " : piece.getType().getValue().toLowerCase() + " | ");
+                else
+                    System.out.print("  | ");
+            System.out.println(rowNumber++ + " ");
+            System.out.println("  +---+---+---+---+---+---+---+---+");
+        }
+        System.out.println("    a   b   c   d   e   f   g   h\n");
     }
 
     @Override

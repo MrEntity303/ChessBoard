@@ -39,7 +39,7 @@ public class CliMakeTurn implements CliTurn {
             if (input.matches(regex)) {
                 char lettera = input.substring(0, 1).charAt(0);
                 int numero = Integer.parseInt(input.substring(1));
-                return new Position(lettera-'A', numero-1);
+                return new Position(numero-1, lettera-'A');
             }
         System.out.println("The coordinate is not valid");
         return null;
