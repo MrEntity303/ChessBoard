@@ -30,6 +30,6 @@ public abstract class Game {
         }
 
     protected void printResult(){
-        System.out.println("Il gioco è finito, turni passati: " + this.getCountTurns());
+        System.out.println("Il gioco è finito, turni passati: " + countTurns);
     }
 }
