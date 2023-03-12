@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.games.chess;
 
-import it.unicam.cs.pa.cli.CliPromotionObserver;
+import it.unicam.cs.pa.cli.chess.CliPromotionObserver;
 import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.Position;
 import org.junit.jupiter.api.Test;
@@ -84,8 +84,8 @@ public class ChessBoardTest {
     public void move(){
         ChessBoard board = ChessBoard.getInstance();
         board.resetBoard();
-        board.move(new Position(1, 7), new Position(3, 7));
-        board.move(new Position(6, 6), new Position(4, 6));
+        board.move(new Position(1, 7), new Position(3, 7), Color.WHITE);
+        board.move(new Position(6, 6), new Position(4, 6), Color.BLACK);
         assertEquals(board.getPiece(new Position(4, 6)).getType(), ChessPieceType.PAWN);
         assertEquals(board.getPiece(new Position(4, 6)).getColor(), Color.BLACK);
         assertEquals(board.getPiece(new Position(3, 7)).getType(), ChessPieceType.PAWN);
@@ -96,9 +96,9 @@ public class ChessBoardTest {
     public void moveIsCapturePawn(){
         ChessBoard board = ChessBoard.getInstance();
         board.resetBoard();
-        board.move(new Position(1, 7), new Position(3, 7));
-        board.move(new Position(6, 6), new Position(4, 6));
-        board.move(new Position(3, 7), new Position(4, 6));
+        board.move(new Position(1, 7), new Position(3, 7), Color.WHITE);
+        board.move(new Position(6, 6), new Position(4, 6), Color.BLACK);
+        board.move(new Position(3, 7), new Position(4, 6), Color.WHITE);
         assertEquals(board.getObservers().size(), 31);
         assertEquals(board.getPiece(new Position(4, 6)).getType(), ChessPieceType.PAWN);
         assertEquals(board.getPiece(new Position(4, 6)).getColor(), Color.WHITE);
@@ -116,11 +116,11 @@ public class ChessBoardTest {
         board.removeObserver(board.getPiece(new Position(1, 0)));
         board.removePiece(new Position(0, 0));
         board.removePiece(new Position(1, 0));
-        board.move(new Position(6, 0), new Position(4, 0));
-        board.move(new Position(4, 0), new Position(3, 0));
-        board.move(new Position(3, 0), new Position(2, 0));
-        board.move(new Position(2, 0), new Position(1, 0));
-        board.move(new Position(1, 0), new Position(0, 0));
+        board.move(new Position(6, 0), new Position(4, 0), Color.BLACK);
+        board.move(new Position(4, 0), new Position(3, 0), Color.BLACK);
+        board.move(new Position(3, 0), new Position(2, 0), Color.BLACK);
+        board.move(new Position(2, 0), new Position(1, 0), Color.BLACK);
+        board.move(new Position(1, 0), new Position(0, 0), Color.BLACK);
         assertNotNull(board.getPiece(new Position(0, 0)));
         assertEquals(board.getPiece(new Position(0, 0)).getType(), ChessPieceType.QUEEN);
     }
@@ -128,8 +128,8 @@ public class ChessBoardTest {
     public void checkPawnIsBlock(){
         ChessBoard board = ChessBoard.getInstance();
         board.resetBoard();
-        board.move(new Position(1, 0), new Position(3, 0));
-        board.move(new Position(6, 0), new Position(4, 0));
+        board.move(new Position(1, 0), new Position(3, 0), Color.WHITE);
+        board.move(new Position(6, 0), new Position(4, 0), Color.BLACK);
         assertTrue(board.isFree(new Position(2, 0)));
         assertFalse(board.isFree(new Position(3, 0)));
         assertTrue(board.isFree(new Position(5, 0)));
