@@ -61,7 +61,7 @@ public class ChessGame extends Game {
             System.out.print(rowNumber + " | ");
             for (ChessPiece piece : row)
                 if (piece != null)
-                    System.out.print(piece.getColor().equals(Color.WHITE) ? piece.getType().getValue() + "W | " : piece.getType().getValue() + "B | ");
+                    System.out.print(piece.getColor().equals(Color.WHITE) ? "W"+piece.getType().getValue() + " | " : "B"+piece.getType().getValue() + " | ");
                 else
                     System.out.print("   | ");
             System.out.println(rowNumber++ + " ");
