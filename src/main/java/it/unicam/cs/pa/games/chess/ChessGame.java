@@ -54,20 +54,20 @@ public class ChessGame extends Game {
     @Override
     protected void printBoard() {
         System.out.println("Stato del gioco");
-        System.out.println("    a   b   c   d   e   f   g   h");
-        System.out.println("  +---+---+---+---+---+---+---+---+");
+        System.out.println("    a    b    c    d    e    f    g    h");
+        System.out.println("  +----+----+----+----+----+----+----+----+");
         int rowNumber = 1;
         for (ArrayList<ChessPiece> row : board.getBoard()) {
             System.out.print(rowNumber + " | ");
             for (ChessPiece piece : row)
                 if (piece != null)
-                    System.out.print(piece.getColor().equals(Color.WHITE) ? piece.getType().getValue() + " | " : piece.getType().getValue().toLowerCase() + " | ");
+                    System.out.print(piece.getColor().equals(Color.WHITE) ? piece.getType().getValue() + "W | " : piece.getType().getValue() + "B | ");
                 else
-                    System.out.print("  | ");
+                    System.out.print("   | ");
             System.out.println(rowNumber++ + " ");
-            System.out.println("  +---+---+---+---+---+---+---+---+");
+            System.out.println("  +----+----+----+----+----+----+----+----+");
         }
-        System.out.println("    a   b   c   d   e   f   g   h\n");
+        System.out.println("    a    b    c    d    e    f    g    h\n");
     }
 
     @Override

@@ -13,7 +13,7 @@ public class CliPromotionObserver implements PromotionObserver {
             System.out.println("Your pawn has reached the last rank! Choose the type of piece to promote to (Knight, Bishop, Rook, Queen):");
 
             while (true) {
-                String input = scanner.nextLine();
+                String input = scanner.next();
                 switch (input.toLowerCase()) {
                     case "knight" -> {
                         return ChessPieceType.KNIGHT;
