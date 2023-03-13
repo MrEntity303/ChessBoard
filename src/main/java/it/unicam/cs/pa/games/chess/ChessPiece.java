@@ -61,12 +61,12 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
         if((this.getColor()==Color.BLACK)&&(positionPiece.x()==6) ||this.getColor()==Color.WHITE&&(positionPiece.x()==1)){
 
             for(int i = 0; i < 2;i++)
-                if(ChessBoard.getInstance().isFree(this.frontMoves(positionPiece, new Position(positionPiece.x() + i * this.getColor().getValue(), positionPiece.y())).getDestination()))
-                    addMove(this.frontMoves(positionPiece, new Position(positionPiece.x() + i *this.getColor().getValue(), positionPiece.y())).isValid());
+                if(ChessBoard.getInstance().isFree(this.moveInDirection(positionPiece, positionPiece, i+1,0).getDestination()))
+                    addMove(this.moveInDirection(positionPiece, positionPiece, i+1,0).isValid());
             checkRightAndLeftPawn();
         }else{
-            if(ChessBoard.getInstance().isFree(this.frontMoves(positionPiece,positionPiece).getDestination()))
-                addMove(this.frontMoves(positionPiece,positionPiece).isValid());
+            if(ChessBoard.getInstance().isFree(this.moveInDirection(positionPiece,positionPiece, 1,0).getDestination()))
+                addMove(this.moveInDirection(positionPiece,positionPiece, 1, 0).isValid());
             checkRightAndLeftPawn();
         }
 //        moves.removeIf(ChessMove::getIsEnPassant);
@@ -80,10 +80,10 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
 
     private void checkRightAndLeftPawn() {
         Position positionPiece = ChessBoard.getInstance().getPosition(this);
-        if(ChessBoard.getInstance().onBoard(this.frontRightMoves(positionPiece,positionPiece).getDestination()) && !ChessBoard.getInstance().isFree(this.frontRightMoves(positionPiece,positionPiece).getDestination()))
-            addMove(this.frontRightMoves(positionPiece,positionPiece).isValid());
-        if(ChessBoard.getInstance().onBoard(this.frontLeftMoves(positionPiece,positionPiece).getDestination()) && !ChessBoard.getInstance().isFree(this.frontLeftMoves(positionPiece,positionPiece).getDestination()))
-            addMove(this.frontLeftMoves(positionPiece,positionPiece).isValid());
+        if(ChessBoard.getInstance().onBoard(this.moveInDirection(positionPiece,positionPiece, 1, 1).getDestination()) && !ChessBoard.getInstance().isFree(this.moveInDirection(positionPiece,positionPiece, 1, 1).getDestination()))
+            addMove(this.moveInDirection(positionPiece,positionPiece, 1, 1).isValid());
+        if(ChessBoard.getInstance().onBoard(this.moveInDirection(positionPiece,positionPiece, 1, -1).getDestination()) && !ChessBoard.getInstance().isFree(this.moveInDirection(positionPiece,positionPiece, 1, -1).getDestination()))
+            addMove(this.moveInDirection(positionPiece,positionPiece, 1, -1).isValid());
     }
 
     private List<ChessMove> knightMoves() {
@@ -112,64 +112,96 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
         return null;
     }
 
-    //region Moves
+    //region Move
     /**
-     * Check if the piece can move forward
-     *      @param position the position to check
+     * Check if the piece can move in the given direction
+     * @param origin the starting position of the piece
+     * @param position the position to check
+     * @param rowOffset the number of rows to move in the forward/backward direction
+     * @param colOffset the number of columns to move in the right/left direction
      */
-    private ChessMove frontMoves(Position origin, Position position) {
-        return new ChessMove(origin,new Position(position.x() + color.getValue(),position.y()));
+    private ChessMove moveInDirection(Position origin, Position position, int rowOffset, int colOffset) {
+        return new ChessMove(origin, new Position(position.x() + rowOffset * color.getValue(), position.y() + colOffset * color.getValue()));
     }
-    /**
-     * Check if the piece can move rightward
-     *      @param position the position to check
-     */
-    private ChessMove rightMoves(Position origin,Position position) {
-        return new ChessMove(origin, new Position(position.x(),position.y()+ color.getValue()));
-    }
-    /**
-     * Check if the piece can move leftward
-     *      @param position the position to check
-     */
-    private ChessMove leftMoves(Position origin, Position position) {
-        return new ChessMove(origin, new Position(position.x(),position.y()+ color.getValue()*-1));
-    }
-
-    /**
-     * Check if the piece can move backward
-     *      @param position the position to check
-     */
-    private ChessMove backMoves(Position origin, Position position) {
-        return new ChessMove(origin, new Position(position.x() + color.getValue()*-1,position.y()));
-    }
-    /**
-     * Check if the piece can move forward and rightward
-     *      @param position the position to check
-     */
-    private ChessMove frontRightMoves(Position origin, Position position) {
-        return new ChessMove(origin,new Position(position.x() + color.getValue(),position.y()+ color.getValue()));
-    }
-    /**
-     * Check if the piece can move forward and leftward
-     *      @param position the position to check
-     */
-    private ChessMove frontLeftMoves(Position origin,Position position) {
-        return new ChessMove(origin, new Position(position.x() + color.getValue(), position.y() + color.getValue() * -1));
-    }
-    /**
-     * Check if the piece can move backward and rightward
-     *      @param position the position to check
-     */
-    private ChessMove backRightMoves(Position origin, Position position) {
-        return new ChessMove(origin,new Position(position.x() + color.getValue()*-1,position.y()+ color.getValue()));
-    }
-    /**
-     * Check if the piece can move backward and leftward
-     *      @param position the position to check
-     */
-    private ChessMove backLeftMoves(Position origin, Position position) {
-        return new ChessMove(origin,new Position(position.x() + color.getValue()*-1,position.y()+ color.getValue()*-1));
-    }
+//    /**
+//     * Check if the piece can move forward
+//     *      @param position the position to check
+//     */
+//    private ChessMove frontMoves(Position origin, Position position) {
+//        return new ChessMove(origin,new Position(position.x() + color.getValue(),position.y()));
+//    }
+//    /**
+//     * Check if the piece can move rightward
+//     *      @param position the position to check
+//     */
+//    private ChessMove rightMoves(Position origin,Position position) {
+//        return new ChessMove(origin, new Position(position.x(),position.y()+ color.getValue()));
+//    }
+//    /**
+//     * Check if the piece can move leftward
+//     *      @param position the position to check
+//     */
+//    private ChessMove leftMoves(Position origin, Position position) {
+//        return new ChessMove(origin, new Position(position.x(),position.y()+ color.getValue()*-1));
+//    }
+//
+//    /**
+//     * Check if the piece can move backward
+//     *      @param position the position to check
+//     */
+//    private ChessMove backMoves(Position origin, Position position) {
+//        return new ChessMove(origin, new Position(position.x() + color.getValue()*-1,position.y()));
+//    }
+//    /**
+//     * Check if the piece can move forward and rightward
+//     *      @param position the position to check
+//     */
+//    private ChessMove frontRightMoves(Position origin, Position position) {
+//        return new ChessMove(origin,new Position(position.x() + color.getValue(),position.y()+ color.getValue()));
+//    }
+//    /**
+//     * Check if the piece can move forward and leftward
+//     *      @param position the position to check
+//     */
+//    private ChessMove frontLeftMoves(Position origin,Position position) {
+//        return new ChessMove(origin, new Position(position.x() + color.getValue(), position.y() + color.getValue() * -1));
+//    }
+//    /**
+//     * Check if the piece can move backward and rightward
+//     *      @param position the position to check
+//     */
+//    private ChessMove backRightMoves(Position origin, Position position) {
+//        return new ChessMove(origin,new Position(position.x() + color.getValue()*-1,position.y()+ color.getValue()));
+//    }
+//    /**
+//     * Check if the piece can move backward and leftward
+//     *      @param position the position to check
+//     */
+//    private ChessMove backLeftMoves(Position origin, Position position) {
+//        return new ChessMove(origin,new Position(position.x() + color.getValue()*-1,position.y()+ color.getValue()*-1));
+//    }
     //endregion
 }
+
+//    /**
+//     * Check if the piece can move in the given direction
+//     * @param origin the starting position of the piece
+//     * @param position the position to check
+//     * @param rowOffset the number of rows to move in the forward/backward direction
+//     * @param colOffset the number of columns to move in the right/left direction
+//     */
+//    private ChessMove moveInDirection(Position origin, Position position, int rowOffset, int colOffset) {
+//        return new ChessMove(origin, new Position(position.x() + rowOffset * color.getValue(), position.y() + colOffset * color.getValue()));
+//    }
+
+
+
+//    moveInDirection(origin, position, 1, 0) // forward move
+//    moveInDirection(origin, position, -1, 0) // backward move
+//    moveInDirection(origin, position, 0, 1) // right move
+//    moveInDirection(origin, position, 0, -1) // left move
+//    moveInDirection(origin, position, 1, 1) // forward and right move
+//    moveInDirection(origin, position, 1, -1) // forward and left move
+//    moveInDirection(origin, position, -1, 1) // backward and right move
+//    moveInDirection(origin, position, -1, -1) // backward and left move
 
