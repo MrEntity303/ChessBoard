@@ -92,6 +92,7 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
     }
 
     private List<ChessMove> bishopMoves() {
+
         //TODO: implement
         return null;
     }
@@ -118,15 +119,6 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
      */
     private ChessMove frontMoves(Position origin, Position position) {
         return new ChessMove(origin,new Position(position.x() + color.getValue(),position.y()));
-
-
-//        if(ChessBoard.getInstance().isFree(position))
-//            System.err.println("Position is free, any piece can move there");
-//            if(ChessBoard.getInstance().isFree(position.x() + color.getValue(),position.y()))
-//                return addMove(position, new Position(position.x() + color.getValue(), position.y())).;
-////            else if(ChessBoard.getInstance().getPiece(position.x()-1,position.y()).getColor() == Color.BLACK)
-////                return addMove(position, new Position(position.x()-1, position.y()));
-//        return false;
     }
     /**
      * Check if the piece can move rightward
@@ -134,21 +126,6 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
      */
     private ChessMove rightMoves(Position origin,Position position) {
         return new ChessMove(origin, new Position(position.x(),position.y()+ color.getValue()));
-//        if(ChessBoard.getInstance().isFree(position.x(),position.y()+ color.getValue()))
-//            return addMove(position, new Position(position.x(), position.y()+ color.getValue()));
-//        return false;
-
-
-
-//        if(ChessBoard.getInstance().isFree(position))
-//            System.err.println("Position is free, any piece can move there");
-//        if(ChessBoard.getInstance().getPiece(position).getColor() == Color.WHITE)
-//            if(ChessBoard.getInstance().isFree(position.x(),position.y()+1))
-//                return addMove(position, new Position(position.x(), position.y()+1));
-//        else //if piece is black
-//            if(ChessBoard.getInstance().isFree(position.x(),position.y()-1))
-//                return addMove(position, new Position(position.x(), position.y()-1));
-//        return false;
     }
     /**
      * Check if the piece can move leftward
@@ -156,21 +133,6 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
      */
     private ChessMove leftMoves(Position origin, Position position) {
         return new ChessMove(origin, new Position(position.x(),position.y()+ color.getValue()*-1));
-//        if(ChessBoard.getInstance().isFree(position.x(),position.y()+ color.getValue()*-1))
-//            return addMove(position, new Position(position.x(), position.y()+ color.getValue()*-1));
-//        return false;
-
-
-
-//        if(ChessBoard.getInstance().isFree(position))
-//            System.err.println("Position is free, any piece can move there");
-//        if(ChessBoard.getInstance().getPiece(position).getColor() == Color.WHITE)
-//            if(ChessBoard.getInstance().isFree(position.x(),position.y()-1))
-//                return addMove(position, new Position(position.x(), position.y()-1));
-//        else //if piece is black
-//            if(ChessBoard.getInstance().isFree(position.x(),position.y()+1))
-//                return addMove(position, new Position(position.x(), position.y()+1));
-//        return false;
     }
 
     /**
@@ -179,73 +141,20 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
      */
     private ChessMove backMoves(Position origin, Position position) {
         return new ChessMove(origin, new Position(position.x() + color.getValue()*-1,position.y()));
-//        if(ChessBoard.getInstance().isFree(position.x() + color.getValue()*-1,position.y()))
-//            return addMove(position, new Position(position.x() + color.getValue()*-1, position.y()));
-//        return false;
-
-
-
-//        if(ChessBoard.getInstance().isFree(position))
-//            System.err.println("Position is free, any piece can move there");
-//        if(ChessBoard.getInstance().getPiece(position).getColor() == Color.WHITE)
-//            if(ChessBoard.getInstance().isFree(position.x()-1,position.y()))
-//                return addMove(position, new Position(position.x()-1, position.y()));
-//        else //if piece is black
-//            if(ChessBoard.getInstance().isFree(position.x()+1,position.y()))
-//                return addMove(position, new Position(position.x()+1, position.y()));
-//        return false;
     }
     /**
      * Check if the piece can move forward and rightward
      *      @param position the position to check
      */
     private ChessMove frontRightMoves(Position origin, Position position) {
-//        try{
         return new ChessMove(origin,new Position(position.x() + color.getValue(),position.y()+ color.getValue()));
-//        }catch (Exception e) {
-//            System.err.println("Exception in frontLeftMoves");
-//            return null;}
-//        if(ChessBoard.getInstance().isFree(position.x() + color.getValue(),position.y()+ color.getValue()))
-//            return addMove(position, new Position(position.x() + color.getValue(), position.y()+ color.getValue()));
-//        return false;
-
-
-
-//        if(ChessBoard.getInstance().isFree(position))
-//            System.err.println("Position is free, any piece can move there");
-//        if(ChessBoard.getInstance().getPiece(position).getColor() == Color.WHITE)
-//            if(ChessBoard.getInstance().isFree(position.x()+1,position.y()+1))
-//                return addMove(position, new Position(position.x()+1, position.y()+1));
-//        else //if piece is black
-//            if(ChessBoard.getInstance().isFree(position.x()-1,position.y()-1))
-//                return addMove(position, new Position(position.x()-1, position.y()-1));
-//        return false;
     }
     /**
      * Check if the piece can move forward and leftward
      *      @param position the position to check
      */
     private ChessMove frontLeftMoves(Position origin,Position position) {
-//        try{
         return new ChessMove(origin, new Position(position.x() + color.getValue(), position.y() + color.getValue() * -1));
-//        }catch (Exception e) {
-//            System.err.println("Exception in frontLeftMoves");
-//            return null;}
-//        if(ChessBoard.getInstance().isFree(position.x() + color.getValue(),position.y()+ color.getValue()*-1))
-//            return addMove(position, new Position(position.x() + color.getValue(), position.y()+ color.getValue()*-1));
-//        return false;
-
-
-
-//        if(ChessBoard.getInstance().isFree(position))
-//            System.err.println("Position is free, any piece can move there");
-//        if(ChessBoard.getInstance().getPiece(position).getColor() == Color.WHITE)
-//            if(ChessBoard.getInstance().isFree(position.x()+1,position.y()-1))
-//                return addMove(position, new Position(position.x()+1, position.y()-1));
-//        else //if piece is black
-//            if(ChessBoard.getInstance().isFree(position.x()-1,position.y()+1))
-//                return addMove(position, new Position(position.x()-1, position.y()+1));
-//        return false;
     }
     /**
      * Check if the piece can move backward and rightward
@@ -253,21 +162,6 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
      */
     private ChessMove backRightMoves(Position origin, Position position) {
         return new ChessMove(origin,new Position(position.x() + color.getValue()*-1,position.y()+ color.getValue()));
-//        if(ChessBoard.getInstance().isFree(position.x() + color.getValue()*-1,position.y()+ color.getValue()))
-//            return addMove(position, new Position(position.x() + color.getValue()*-1, position.y()+ color.getValue()));
-//        return false;
-
-
-
-//        if(ChessBoard.getInstance().isFree(position))
-//            System.err.println("Position is free, any piece can move there");
-//        if(ChessBoard.getInstance().getPiece(position).getColor() == Color.WHITE)
-//            if(ChessBoard.getInstance().isFree(position.x()-1,position.y()+1))
-//                return addMove(position, new Position(position.x()-1, position.y()+1));
-//        else //if piece is black
-//            if(ChessBoard.getInstance().isFree(position.x()+1,position.y()-1))
-//                return addMove(position, new Position(position.x()+1, position.y()-1));
-//        return false;
     }
     /**
      * Check if the piece can move backward and leftward
@@ -275,21 +169,6 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
      */
     private ChessMove backLeftMoves(Position origin, Position position) {
         return new ChessMove(origin,new Position(position.x() + color.getValue()*-1,position.y()+ color.getValue()*-1));
-//        if(ChessBoard.getInstance().isFree(position.x() + color.getValue()*-1,position.y()+ color.getValue()*-1))
-//            return addMove(position, new Position(position.x() + color.getValue()*-1, position.y()+ color.getValue()*-1));
-//        return false;
-
-
-
-//        if(ChessBoard.getInstance().isFree(position))
-//            System.err.println("Position is free, any piece can move there");
-//        if(ChessBoard.getInstance().getPiece(position).getColor() == Color.WHITE)
-//            if(ChessBoard.getInstance().isFree(position.x()-1,position.y()-1))
-//                return addMove(position, new Position(position.x()-1, position.y()-1));
-//        else //if piece is black
-//            if(ChessBoard.getInstance().isFree(position.x()+1,position.y()+1))
-//                return addMove(position, new Position(position.x()+1, position.y()+1));
-//        return false;
     }
     //endregion
 }
