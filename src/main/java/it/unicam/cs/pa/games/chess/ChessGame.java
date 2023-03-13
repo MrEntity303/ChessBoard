@@ -52,7 +52,7 @@ public class ChessGame extends Game {
     }
 
     @Override
-    protected void printBoard() {
+    public void printBoard() {
         System.out.println("Stato del gioco");
         System.out.println("    a    b    c    d    e    f    g    h");
         System.out.println("  +----+----+----+----+----+----+----+----+");

@@ -14,6 +14,9 @@ import java.util.Optional;
 public class ChessBoard implements Board {
     private static ChessBoard instance;
     private  ArrayList<ArrayList<ChessPiece>> board;
+
+    private final List<ChessMove> movesHistory = new ArrayList<>();
+
     private  final ArrayList<ChessPiece> observers = new ArrayList<>();
     private PromotionObserver promotionObserver;
     //region Constructors
@@ -152,6 +155,13 @@ public class ChessBoard implements Board {
     }
 
     /**
+     * Add move to the history
+     **/
+    public void addMove(ChessMove move) {
+    	this.movesHistory.add(move);
+    }
+
+    /**
      * Check if the specified position is on the board
      *      @param position the position
      *      @return true if the position is on the board, false otherwise
@@ -177,6 +187,8 @@ public class ChessBoard implements Board {
 
         Optional<ChessMove> moveFromList = piece.getList().stream().filter(move -> move.getDestination().equals(destination)).findFirst();
         if (moveFromList.isEmpty()) return false;
+
+        this.addMove(moveFromList.get());
 
         this.executeCapture(destination, moveFromList.get());
 

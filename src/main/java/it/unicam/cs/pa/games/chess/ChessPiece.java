@@ -15,6 +15,7 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
         this.color = color;
     }
 
+    @Override
     public void setType(ChessPieceType type) {
         this.type = type;
     }
@@ -41,6 +42,12 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
     }
 
     @Override
+    public void resetListMoves()
+    {
+        moves.clear();
+    }
+
+    @Override
     public void update() {
         moves = this.calculateMoves();
     }
@@ -57,9 +64,7 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
     }
 
     private List<ChessMove> pawnMoves() {
-        //moves.removeIf(ChessMove::getIsEnPassant);
-        moves.clear();
-        //resetMoveList();
+        this.resetListMoves();
         Position positionPiece = ChessBoard.getInstance().getPosition(this);
         //Controllo se il pedone è in posizione iniziale e puo effettuare 2 mosse
         if ((this.getColor() == Color.BLACK) && (positionPiece.x() == 6) || this.getColor() == Color.WHITE && (positionPiece.x() == 1)) {
@@ -73,14 +78,8 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
                 addMove(this.moveInDirection(positionPiece, 1, 0).isValid());
             checkRightAndLeftPawn();
         }
-//        moves.removeIf(ChessMove::getIsEnPassant);
-        return moves;
+        return this.getList();
     }
-
-//    private void resetMoveList()
-//    {
-//        moves.removeIf(ChessMove::getIsEnPassant)
-//    }
 
     private void checkRightAndLeftPawn() {
         Position positionPiece = ChessBoard.getInstance().getPosition(this);
@@ -92,8 +91,12 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
             addMove(this.moveInDirection(positionPiece, 1, -1).isValid());
     }
 
+    /**
+     * Check if the piece can move in the given direction
+     * @return the list of legal moves
+     */
     private List<ChessMove> knightMoves() {
-        moves.clear();
+        this.resetListMoves();
         Position piecePosition = ChessBoard.getInstance().getPosition(this);
         addMove(moveInDirection(piecePosition, 2, 1).isValid()); // forward and right move
         addMove(moveInDirection(piecePosition, 1, 2).isValid()); // forward and right move
@@ -106,44 +109,59 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
 
         addMove(moveInDirection(piecePosition, -2, -1).isValid()); // backward and left move
         addMove(moveInDirection(piecePosition, -1, -2).isValid()); // backward and left move
-        return moves;
+        return this.getList();
     }
 
+    /**
+     * Check if the piece can move in the given direction
+     * @return the list of legal moves
+     */
     private List<ChessMove> bishopMoves() {
-        moves.clear();
+        this.resetListMoves();
         Position piecePosition = ChessBoard.getInstance().getPosition(this);
         int[][] directions = {{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
         legalDirection(piecePosition, directions);
-        return moves;
+        return this.getList();
     }
 
+    /**
+     * Check if the piece can move in the given direction
+     * @return the list of legal moves
+     */
     private List<ChessMove> rookMoves() {
-        moves.clear();
+        this.resetListMoves();
         Position piecePosition = ChessBoard.getInstance().getPosition(this);
         int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         legalDirection(piecePosition, directions);
-        return moves;
+        return this.getList();
     }
 
+    /**
+     * Check if the piece can move in the given direction
+     * @return the list of legal moves
+     */
     private List<ChessMove> queenMoves() {
-        moves.clear();
+        this.resetListMoves();
         Position piecePosition = ChessBoard.getInstance().getPosition(this);
         int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1},{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
         legalDirection(piecePosition, directions);
-        return moves;
+        return this.getList();
     }
 
+    /**
+     * Check if the piece can move in the given direction
+     * @return the list of legal moves
+     */
     private List<ChessMove> kingMoves() {
-        moves.clear();
+        this.resetListMoves();
         Position piecePosition = ChessBoard.getInstance().getPosition(this);
         int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1},{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
         for (int[] direction : directions)
             addMove(this.moveInDirection(piecePosition, direction[0], direction[1]).isValid());
-        return moves;
+        return this.getList();
     }
 
     //region Move
-
     /**
      * Check if the piece can move in the given direction
      *
@@ -151,9 +169,16 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
      * @param rowOffset the number of rows to move in the forward/backward direction
      * @param colOffset the number of columns to move in the right/left direction
      */
-    private ChessMove moveInDirection(Position origin, int rowOffset, int colOffset) {
+    @Override
+    public ChessMove moveInDirection(Position origin, int rowOffset, int colOffset) {
         return new ChessMove(origin, new Position(origin.x() + rowOffset * color.getValue(), origin.y() + colOffset * color.getValue()));
     }
+
+    /**
+     * Check all moves for one direction
+     * @param origin position origin of piece
+     * @param legalDirections all legal direction for a piece
+     */
     private void legalDirection(Position origin,int[][] legalDirections) {
         for (int[] direction : legalDirections) {
             int i = 1;
@@ -168,29 +193,6 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
     }
     //endregion
 }
-
-
-//    moveInDirection(origin, position, 1, 0) // forward move
-//    moveInDirection(origin, position, -1, 0) // backward move
-//    moveInDirection(origin, position, 0, 1) // right move
-//    moveInDirection(origin, position, 0, -1) // left move
-//    moveInDirection(origin, position, 1, 1) // forward and right move
-//    moveInDirection(origin, position, 1, -1) // forward and left move
-//    moveInDirection(origin, position, -1, 1) // backward and right move
-//    moveInDirection(origin, position, -1, -1) // backward and left move
-
-
-//    moveInDirection(origin, position, 2, 1) // forward and right move
-//    moveInDirection(origin, position, 1, 2) // forward and right move
-
-//    moveInDirection(origin, position, 2, -1) // forward and left move
-//    moveInDirection(origin, position, 1, -2) // forward and left move
-
-//    moveInDirection(origin, position, -2, 1) // backward and right move
-//    moveInDirection(origin, position, -1, 2) // backward and right move
-
-//    moveInDirection(origin, position, -2, -1) // backward and left move
-//    moveInDirection(origin, position, -1, -2) // backward and left move
 
 
 

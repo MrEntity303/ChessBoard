@@ -25,6 +25,7 @@ public class ChessPlayer extends Player {
     }
 
     public Piece<? extends Piece<ChessPiece>> getKing() {
+
         return null;
     }
 

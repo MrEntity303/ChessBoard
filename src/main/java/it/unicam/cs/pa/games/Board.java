@@ -57,5 +57,11 @@ public interface Board{
      * @param destination the destination of the piece
      */
     boolean move(Position origin, Position destination, Color color);
+
+    /**
+     * Check if a position is on the board
+     * @param position the position to check
+     * @return true if the position is on the board, false otherwise
+     */
     boolean onBoard(Position position);
 }
