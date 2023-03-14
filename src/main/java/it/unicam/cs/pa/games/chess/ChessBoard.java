@@ -61,6 +61,26 @@ public class ChessBoard implements Board {
         this.promotionObserver = promotionObserver;
     }
 
+    public void boardClear() {
+        for (ArrayList<ChessPiece> chessPieces : this.board) {
+            chessPieces.replaceAll(ignored -> null);
+        }
+    }
+
+    public List<ChessMove> getMovesHistory() {
+        return movesHistory;
+    }
+
+//    public void comeBackMove()
+//    {
+//        if(lastMove().getIsCapture())
+//
+//    }
+
+    public ChessMove lastMove() {
+        return movesHistory.get(movesHistory.size() - 1);
+    }
+
     public PromotionObserver getPromotionObserver() {
         return promotionObserver;
     }
@@ -188,6 +208,8 @@ public class ChessBoard implements Board {
         Optional<ChessMove> moveFromList = piece.getList().stream().filter(move -> move.getDestination().equals(destination)).findFirst();
         if (moveFromList.isEmpty()) return false;
 
+        if(this.invalidMoveCheck(piece)) return false;
+
         this.addMove(moveFromList.get());
 
         this.executeCapture(destination, moveFromList.get());
@@ -207,6 +229,22 @@ public class ChessBoard implements Board {
             this.removePiece(origin);
             this.setPiece(piece, destination);
             this.notifyObservers();
+        }
+
+        private boolean invalidMoveCheck(ChessPiece piece)
+        {
+            List<ChessPiece> listPiece = new ArrayList<>();
+            if(piece.getColor() == Color.WHITE)
+                listPiece = ChessBoard.getInstance().observers.stream().filter(o -> o.getColor() == Color.BLACK)/* && o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP)*/.toList();
+            else
+                listPiece = ChessBoard.getInstance().observers.stream().filter(o -> o.getColor() == Color.WHITE)/* && o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP)*/.toList();
+            listPiece = listPiece.stream().filter(o -> o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP).toList();
+            boolean isInvalid = false;
+            for (ChessPiece pieceApp: listPiece) {
+                isInvalid = pieceApp.getList().stream().anyMatch(move -> move.getDestination().equals(ChessBoard.getInstance().getPosition(piece)));
+                if(isInvalid) break;
+            }
+            return isInvalid;
         }
 
         /**
@@ -279,6 +317,10 @@ public class ChessBoard implements Board {
      */
     public List<ChessPiece> getObservers() {
         return this.observers;
+    }
+
+    public void removeObservers() {
+    	this.observers.clear();
     }
 
     /**

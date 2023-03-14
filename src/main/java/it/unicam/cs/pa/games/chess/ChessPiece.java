@@ -157,8 +157,17 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
         Position piecePosition = ChessBoard.getInstance().getPosition(this);
         int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1},{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
         for (int[] direction : directions)
-            addMove(this.moveInDirection(piecePosition, direction[0], direction[1]).isValid());
+            if(this.canMove(this.moveInDirection(piecePosition, direction[0], direction[1]).getDestination()))
+                addMove(this.moveInDirection(piecePosition, direction[0], direction[1]).isValid());
         return this.getList();
+    }
+
+    private boolean canMove(Position destination) {
+        for (ChessPiece piece : ChessBoard.getInstance().getObservers()) {
+            if(piece.getList().stream().anyMatch(move -> move.getDestination().equals(destination)))
+                return false;
+        }
+        return true;
     }
 
     //region Move

@@ -11,7 +11,7 @@ public abstract class Game {
         //template method
         public final void play() {
             initialize();
-            while (!endOfGame()) {
+            while (countTurns==0 || !endOfGame()) {
                 makeTurn();
                 countTurns++;
             }

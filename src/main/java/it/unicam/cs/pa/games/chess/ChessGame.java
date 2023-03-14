@@ -4,9 +4,11 @@ import it.unicam.cs.pa.cli.CliMakeTurn;
 import it.unicam.cs.pa.cli.chess.CliPromotionObserver;
 import it.unicam.cs.pa.games.Color;
 import it.unicam.cs.pa.games.Game;
+import it.unicam.cs.pa.games.Position;
 import it.unicam.cs.pa.players.chess.ChessPlayer;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ChessGame extends Game {
@@ -40,6 +42,7 @@ public class ChessGame extends Game {
         for (ChessPlayer player:players) {
             System.out.println("Turn of Player " + player.getName());
             printBoard();
+//            player.setCheckKing();
             while(!player.makeMove(cliMakeTurn.inputTurn())) {
                 System.out.println("Mossa non valida");
                 System.out.println("Turn of Player " + player.getName());
@@ -72,7 +75,52 @@ public class ChessGame extends Game {
 
     @Override
     public boolean endOfGame() {
-        return players[0].isCheckKing() || players[1].isCheckKing();
+//        players[0].setCheckKing();
+//        players[1].setCheckKing();
+        return players[0].isCheckKing() && players[0].getKing().getList().isEmpty() && this.existGuardianMove(players[0])
+                ||
+               players[1].isCheckKing() && players[1].getKing().getList().isEmpty() && this.existGuardianMove(players[1]);
+    }
+
+    public boolean existGuardianMove(ChessPlayer player)
+    {
+        return player.isCheckKing() && this.positionsTwoIntervals(ChessBoard.getInstance().getPosition(players[0].getKing()), ChessBoard.getInstance().lastMove().getDestination()).isEmpty();
+    }
+
+    private List<Position> positionsTwoIntervals(Position position1, Position position2)
+    {
+        List<Position> positionList = new ArrayList<>();
+        if(Math.abs(position1.y() - position2.y()) == Math.abs(position1.x() - position2.x()))
+            this.getDiagonalPositions(positionList, position1, position2);
+        else if(position1.y() == position2.y())
+            this.getForwardAndBackwardPositions(positionList, position1, position2);
+        else if (position1.x() == position2.x())
+            this.getLeftAndRight(positionList, position1, position2);
+        return positionList;
+    }
+
+    private void getForwardAndBackwardPositions(List<Position> list, Position position1, Position position2)
+    {
+        for(int i = (position1.x())+1; i < position2.x(); i++)
+            list.add(new Position(i, position1.y()));
+    }
+    private void getDiagonalPositions(List<Position> list, Position position1, Position position2)
+    {
+        int x = (position2.y() > position1.y()) ? 1 : -1;
+        int y = (position2.x() > position1.x()) ? 1 : -1;
+        int column = position1.y();
+        int row = position1.x();
+        while (column != position2.y() && row != position2.x()) {
+            column += x;
+            row += y;
+            list.add(new Position(row, column));
+        }
+        list.remove(list.size()-1);
+    }
+    private void getLeftAndRight(List<Position> list, Position position1, Position position2)
+    {
+        for(int i = (position1.y())+1; i < position2.y(); i++)
+            list.add(new Position(position1.x(), i));
     }
 
     @Override
