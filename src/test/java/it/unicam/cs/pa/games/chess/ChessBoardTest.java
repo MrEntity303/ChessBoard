@@ -135,4 +135,15 @@ public class ChessBoardTest {
         assertTrue(board.isFree(new Position(5, 0)));
         assertFalse(board.isFree(new Position(4, 0)));
     }
+//    @Test
+//    public void invalidMove(){
+//        ChessBoard board = ChessBoard.getInstance();
+//        board.resetBoard();
+//        board.removeObserver(board.getPiece(new Position(6, 4)));
+//        board.removePiece(new Position(6, 4));
+//        board.move(new Position(6, 3), new Position(4, 3), Color.BLACK);
+//        board.move(new Position(1, 4), new Position(3, 4), Color.WHITE);
+//        board.move(new Position(7, 3), new Position(6, 4), Color.BLACK);
+//        assertFalse(board.move(new Position(3, 4), new Position(4, 3), Color.WHITE));
+//    }
 }
