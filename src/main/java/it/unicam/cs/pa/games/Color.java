@@ -12,7 +12,4 @@ public enum Color {
     public int getValue() {
         return value;
     }
-    public Color getOppositeColor(){
-        return this == WHITE ? BLACK : WHITE;
-    }
 }

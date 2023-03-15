@@ -64,4 +64,14 @@ public interface Board{
      * @return true if the position is on the board, false otherwise
      */
     boolean onBoard(Position position);
+
+    /**
+     * Reset the board
+     **/
+    void resetBoard();
+
+    /**
+     * Clear the board of null pieces
+     **/
+    void boardClear();
 }

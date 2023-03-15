@@ -4,8 +4,6 @@ public abstract class Move {
     private final Position origin;
     private final Position destination;
     public Move(Position origin, Position destination) {
-//        if(origin.x() < 0 || origin.x() > 7 || origin.y() < 0 || origin.y() > 7 || destination.x() < 0 || destination.x() > 7 || destination.y() < 0 || destination.y() > 7)
-//            throw new IllegalArgumentException("Origin and destination must be between 0 and 7");
         this.origin = origin;
         this.destination = destination;
     }

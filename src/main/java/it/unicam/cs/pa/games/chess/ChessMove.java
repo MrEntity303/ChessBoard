@@ -7,9 +7,6 @@ import it.unicam.cs.pa.games.Position;
 public class ChessMove extends Move {
     private boolean isCapture;
     private boolean isPromotion;
-    private boolean isEnPassant;
-    private boolean isCastling;
-
 
     public ChessMove(Position origin, Position destination) {
             super(origin, destination);
@@ -31,10 +28,9 @@ public class ChessMove extends Move {
 
         return this;
     }
+    // region Getters and Setters
     public boolean getIsCapture(){return this.isCapture;}
     public boolean getIsPromotion(){return this.isPromotion;}
-    public boolean getIsEnPassant(){return this.isEnPassant;}
-    public boolean getIsCastling(){return this.isCastling;}
 
     public void setIsCapture(){
         if(ChessBoard.getInstance().getPiece(this.getDestination()) != null
@@ -47,7 +43,6 @@ public class ChessMove extends Move {
                 && (ChessBoard.getInstance().getPiece(this.getOrigin()).getColor().equals(Color.WHITE) ? this.getDestination().x() == 7 : this.getDestination().x() == 0))
             this.isPromotion = true;
     }
+    //endregion
 }
-//TODO: implement (deve controllare se la mossa e valida ed il tipo di mossa)
-//if(this.getDestination().x()<0|| this.getDestination().x()>7 || this.getDestination().y()<0 || this.getDestination().y()>7)
 

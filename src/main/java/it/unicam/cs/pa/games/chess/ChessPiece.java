@@ -52,6 +52,10 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
         moves = this.calculateMoves();
     }
 
+    /**
+     * Check if a move is legal for the piece
+     * @return list of legal moves
+     */
     public List<ChessMove> calculateMoves() {
         return switch (this.getType()) {
             case KING -> kingMoves();
@@ -63,6 +67,10 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
         };
     }
 
+    /**
+     * Check if the piece can move in the given direction
+     * @return the list of legal moves
+     */
     private List<ChessMove> pawnMoves() {
         this.resetListMoves();
         Position positionPiece = ChessBoard.getInstance().getPosition(this);
@@ -81,6 +89,9 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
         return this.getList();
     }
 
+    /**
+     * Check if the piece can move in the given direction
+     */
     private void checkRightAndLeftPawn() {
         Position positionPiece = ChessBoard.getInstance().getPosition(this);
         if (ChessBoard.getInstance().onBoard(this.moveInDirection(positionPiece, 1, 1).getDestination())
@@ -162,6 +173,10 @@ public class ChessPiece implements Piece<ChessPieceType>, Observer {
         return this.getList();
     }
 
+    /**
+     * Check if the piece can move in the given direction
+     * @param destination the position of the piece
+     */
     private boolean canMove(Position destination) {
         for (ChessPiece piece : ChessBoard.getInstance().getObservers()) {
             if(piece.getList().stream().anyMatch(move -> move.getDestination().equals(destination)))

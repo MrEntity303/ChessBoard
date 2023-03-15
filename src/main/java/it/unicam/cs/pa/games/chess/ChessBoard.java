@@ -8,6 +8,7 @@ import it.unicam.cs.pa.games.Piece;
 import it.unicam.cs.pa.games.Position;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,34 +58,47 @@ public class ChessBoard implements Board {
     //endregion
 
     //region Methods ChessBoard
+    /**
+     * Set up the observer for the promotion
+     **/
     public void setPromotionObserver(CliPromotionObserver promotionObserver) {
         this.promotionObserver = promotionObserver;
     }
 
+    @Override
     public void boardClear() {
         for (ArrayList<ChessPiece> chessPieces : this.board) {
-            chessPieces.replaceAll(ignored -> null);
+            Collections.fill(chessPieces, null);
         }
     }
 
+
+    /**
+     * Get move history of game
+     **/
     public List<ChessMove> getMovesHistory() {
         return movesHistory;
     }
 
-//    public void comeBackMove()
-//    {
-//        if(lastMove().getIsCapture())
-//
-//    }
 
+    /**
+     * Get last move
+     **/
     public ChessMove lastMove() {
         return movesHistory.get(movesHistory.size() - 1);
     }
 
+    /**
+     * Get the observer for the promotion
+     **/
     public PromotionObserver getPromotionObserver() {
         return promotionObserver;
     }
 
+    /**
+     * Get board of the game
+     * @return ArrayList<ArrayList<ChessPiece>> board
+     */
     public ArrayList<ArrayList<ChessPiece>> getBoard() {
         return board;
     }
@@ -223,101 +237,99 @@ public class ChessBoard implements Board {
             return false;
         }
         return true;
-        }
-
-        /**
-         * Move a piece from the origin position to the destination position
-         *      @param origin the origin position
-         *      @param destination the destination position
-         **/
-        private void swapPiece(ChessPiece piece,Position origin, Position destination){
-            this.removePiece(origin);
-            this.setPiece(piece, destination);
-            this.notifyObservers();
-        }
-
-        private ArrayList<ArrayList<ChessPiece>> undoLastMove()
-        {
-            ArrayList<ArrayList<ChessPiece>> boardCopy = new ArrayList<>();
-            for (ArrayList<ChessPiece> chessPieces : board) {
-                ArrayList<ChessPiece> row = new ArrayList<>(chessPieces);
-                boardCopy.add(row);
-            }
-            return boardCopy;
-        }
-
-        private boolean invalidMoveCheck(Color color){
-            Position positionKing = null;
-            for (ChessPiece piece:ChessBoard.getInstance().getObservers())
-                if (piece.getType() == ChessPieceType.KING && piece.getColor() == color)
-                    positionKing = ChessBoard.getInstance().getPosition(piece);
-            if(positionKing != null)
-                for (ChessPiece piece: ChessBoard.getInstance().getObservers())
-                    for (ChessMove move : piece.getList())
-                        if(move.getDestination().equals(positionKing))
-                            return false;
-            return true;
-//            List<ChessPiece> listPiece;
-//            if(piece.getColor() == Color.WHITE)
-//                listPiece = ChessBoard.getInstance().observers.stream().filter(o -> o.getColor() == Color.BLACK)/* && o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP)*/.toList();
-//            else
-//                listPiece = ChessBoard.getInstance().observers.stream().filter(o -> o.getColor() == Color.WHITE)/* && o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP)*/.toList();
-//            listPiece = listPiece.stream().filter(o -> o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP).toList();
-//            boolean isInvalid = false;
-//            for (ChessPiece pieceApp: listPiece) {
-//                isInvalid = pieceApp.getList().stream().anyMatch(move -> move.getDestination().equals(ChessBoard.getInstance().getPosition(piece)));
-//                if(isInvalid) break;
-//            }
-//            return isInvalid;
-        }
-
-        /**
-         * Execute the capture of a piece
-         *      @param destination the origin position
-         *      @param move the destination position
-         **/
-        private void executeCapture(Position destination, ChessMove move){
-            if (move.getIsCapture()) {
-                this.removeObserver(this.getPiece(destination));
-                this.removePiece(destination);
-            }
-        }
-
-        /**
-         * Execute the promotion of a piece
-         *      @param origin the origin position
-         *      @param destination the destination position
-         *      @param piece the piece to promote
-         *      @param move the move to execute
-         **/
-        private boolean executePromotion(Position origin, Position destination, ChessPiece piece, ChessMove move){
-            if (move.getIsPromotion()) {
-                this.removePiece(origin);
-                this.setPiece(piece, destination);
-                ChessBoard.getInstance().getPiece(destination).setType(this.getPromotionObserver().handlePromotion(piece.getColor()));
-                this.notifyObservers();
-            }
-            return false;
-        }
+    }
 
         /**
          * Reset the board
          **/
-        public void resetBoard() {//TODO: da rivedere per i test
+        @Override
+        public void resetBoard() {
             this.board.clear();
             this.observers.clear();
             this.board = new ArrayList<>();
             for (int i = 0; i < 8; i++) {
                 this.board.add(new ArrayList<>());
-                for (int j = 0; j < 8; j++) {
+                for (int j = 0; j < 8; j++)
                     this.board.get(i).add(null);
-                }
             }
             this.setupBoard();
             this.createListObservers();
             this.notifyObservers();
-
         }
+    //endregion
+
+    //region Private Methods
+    /**
+     * Move a piece from the origin position to the destination position
+     *      @param origin the origin position
+     *      @param destination the destination position
+     **/
+    private void swapPiece(ChessPiece piece,Position origin, Position destination){
+        this.removePiece(origin);
+        this.setPiece(piece, destination);
+        this.notifyObservers();
+    }
+
+
+    /**
+     * Save a version of board before the last move
+     **/
+    private ArrayList<ArrayList<ChessPiece>> undoLastMove()
+    {
+        ArrayList<ArrayList<ChessPiece>> boardCopy = new ArrayList<>();
+        for (ArrayList<ChessPiece> chessPieces : board) {
+            ArrayList<ChessPiece> row = new ArrayList<>(chessPieces);
+            boardCopy.add(row);
+        }
+        return boardCopy;
+    }
+
+    /**
+     * Check if the move is a legal for kingCheck
+     *      @param color of the piece
+     *      @return true if the move of player is legal, false otherwise
+     **/
+    private boolean invalidMoveCheck(Color color){
+        Position positionKing = null;
+        for (ChessPiece piece:ChessBoard.getInstance().getObservers())
+            if (piece.getType() == ChessPieceType.KING && piece.getColor() == color)
+                positionKing = ChessBoard.getInstance().getPosition(piece);
+        if(positionKing != null)
+            for (ChessPiece piece: ChessBoard.getInstance().getObservers())
+                for (ChessMove move : piece.getList())
+                    if(move.getDestination().equals(positionKing))
+                        return false;
+        return true;
+    }
+
+    /**
+     * Execute the capture of a piece
+     *      @param destination the origin position
+     *      @param move the destination position
+     **/
+    private void executeCapture(Position destination, ChessMove move){
+        if (move.getIsCapture()) {
+            this.removeObserver(this.getPiece(destination));
+            this.removePiece(destination);
+        }
+    }
+
+    /**
+     * Execute the promotion of a piece
+     *      @param origin the origin position
+     *      @param destination the destination position
+     *      @param piece the piece to promote
+     *      @param move the move to execute
+     **/
+    private boolean executePromotion(Position origin, Position destination, ChessPiece piece, ChessMove move){
+        if (move.getIsPromotion()) {
+            this.removePiece(origin);
+            this.setPiece(piece, destination);
+            ChessBoard.getInstance().getPiece(destination).setType(this.getPromotionObserver().handlePromotion(piece.getColor()));
+            this.notifyObservers();
+        }
+        return false;
+    }
     //endregion
 
     //region Methods Observer
@@ -342,7 +354,9 @@ public class ChessBoard implements Board {
     public List<ChessPiece> getObservers() {
         return this.observers;
     }
-
+    /**
+     * Remove all the observers
+     **/
     public void removeObservers() {
     	this.observers.clear();
     }

@@ -32,6 +32,9 @@ public class ChessGame extends Game {
         System.out.println("Inizializzazione del gioco di scacchi");
     }
 
+    /**
+     * Method that initializes the players and sets their color
+     */
     private void initializePlayers() {
         players[0].setColor(Color.WHITE);
         players[1].setColor(Color.BLACK);
@@ -42,7 +45,6 @@ public class ChessGame extends Game {
         for (ChessPlayer player:players) {
             System.out.println("Turn of Player " + player.getName());
             printBoard();
-//            player.setCheckKing();
             while(!player.makeMove(cliMakeTurn.inputTurn())) {
                 System.out.println("Mossa non valida");
                 System.out.println("Turn of Player " + player.getName());
@@ -75,18 +77,26 @@ public class ChessGame extends Game {
 
     @Override
     public boolean endOfGame() {
-//        players[0].setCheckKing();
-//        players[1].setCheckKing();
         return players[0].isCheckKing() && players[0].getKing().getList().isEmpty() && this.existGuardianMove(players[0])
                 ||
                players[1].isCheckKing() && players[1].getKing().getList().isEmpty() && this.existGuardianMove(players[1]);
     }
-
+    /**
+     * Method that checks if the king is in check and if there is a piece that can protect it
+     * @param player player
+     * @return true if there is a piece that can protect the king, false otherwise
+     */
     public boolean existGuardianMove(ChessPlayer player)
     {
         return player.isCheckKing() && this.positionsTwoIntervals(ChessBoard.getInstance().getPosition(players[0].getKing()), ChessBoard.getInstance().lastMove().getDestination()).isEmpty();
     }
 
+    /**
+     * Method that returns a list of positions between two positions
+     * @param position1 position1
+     * @param position2 position2
+     * @return list of positions
+     */
     private List<Position> positionsTwoIntervals(Position position1, Position position2)
     {
         List<Position> positionList = new ArrayList<>();
@@ -104,6 +114,7 @@ public class ChessGame extends Game {
         for(int i = (position1.x())+1; i < position2.x(); i++)
             list.add(new Position(i, position1.y()));
     }
+
     private void getDiagonalPositions(List<Position> list, Position position1, Position position2)
     {
         int x = (position2.y() > position1.y()) ? 1 : -1;
@@ -117,6 +128,7 @@ public class ChessGame extends Game {
         }
         list.remove(list.size()-1);
     }
+
     private void getLeftAndRight(List<Position> list, Position position1, Position position2)
     {
         for(int i = (position1.y())+1; i < position2.y(); i++)

@@ -40,13 +40,16 @@ public class CliMenuGames implements CliMenu {
         }
     }
 
+    /**
+     * This method insert to number and return the input.
+     * @return int input
+     */
     public int getIntInput(){
         int input = 0;
         boolean valid = false;
         while(!valid) {
             try {
                 input = scanner.nextInt();
-                System.out.println("Input: " + input);
                 valid = true;
             } catch (Exception e) {
                 scanner.nextLine();
@@ -56,6 +59,7 @@ public class CliMenuGames implements CliMenu {
         return input;
     }
 
+    @Override
     public ChessPlayer[] createPlayers(int numPlayers) {
         ChessPlayer[] players = new ChessPlayer[numPlayers];
         for (int i = 0; i < players.length ;i++){
@@ -64,7 +68,8 @@ public class CliMenuGames implements CliMenu {
         return players;
     }
 
-    private String chooseName(int numPlayer) {
+    @Override
+    public String chooseName(int numPlayer) {
         System.out.println("Choose a name for "+(numPlayer+1)+"st Player: ");
         return scanner.next();
     }

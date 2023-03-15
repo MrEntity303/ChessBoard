@@ -17,20 +17,32 @@ public abstract class Game {
             }
             printResult();
         }
+    //hook methods - ridefiniti dalle sottoclassi
+    /**
+     * Initialize the game
+     */
+     protected void initialize() {
+        System.out.println("Inizializzazione del gioco...");
+     }
+     /**
+      * Make a turn
+      */
+     protected abstract void makeTurn();
 
-        //hook methods - possono essere ridefiniti dalle sottoclassi
-        protected void initialize() {
-            System.out.println("Inizializzazione del gioco...");
-        }
+     /**
+      * Print the board
+      */
+     protected abstract void printBoard();
+     /**
+      * Check if the game is ended
+      * @return true if the game is ended, false otherwise
+      */
+     protected boolean endOfGame() {
+         return false;}
 
-        protected abstract void makeTurn();
-        
-        protected abstract void printBoard();
-
-        protected boolean endOfGame() {
-            return false;//TODO aggiungere condizione di fine gioco
-        }
-
+    /**
+     * Print the result of the game
+     */
     protected void printResult(){
         System.out.println("Il gioco è finito, turni passati: " + countTurns);
     }

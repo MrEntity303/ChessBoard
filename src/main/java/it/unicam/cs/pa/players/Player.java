@@ -31,5 +31,11 @@ public abstract class Player {
     {
         this.color = color;
     }
+
+    /**
+     * Make a move
+     * @param move move to make
+     * @return true if the move is valid, false otherwise
+     */
     public abstract boolean makeMove(Move move);
 }
