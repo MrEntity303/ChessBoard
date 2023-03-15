@@ -10,5 +10,6 @@ public class Main {
         CliMenuGames cliGames = new CliMenuGames(scanner);
         cliGames.printMenu();
         cliGames.chooseGame();
+        scanner.close();
     }
 }

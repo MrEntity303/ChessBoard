@@ -9,6 +9,7 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
     implementation("org.projectlombok:lombok:1.18.22")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
@@ -22,5 +23,6 @@ tasks {
     val run by creating(JavaExec::class) {
         mainClass.set("it.unicam.cs.pa.Main")
         classpath = sourceSets.main.get().runtimeClasspath
+        standardInput = System.`in`
     }
 }

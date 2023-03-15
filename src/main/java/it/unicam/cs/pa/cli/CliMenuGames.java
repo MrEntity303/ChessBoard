@@ -1,7 +1,6 @@
 package it.unicam.cs.pa.cli;
 
 import it.unicam.cs.pa.games.chess.ChessGame;
-import it.unicam.cs.pa.players.Player;
 import it.unicam.cs.pa.players.chess.ChessPlayer;
 
 import java.util.Scanner;
@@ -27,15 +26,15 @@ public class CliMenuGames implements CliMenu {
                 chessGame.play();
             }
             case 2 -> System.out.println("Checkers not implemented yet");
-            //TODO: implementare il gioco delle dame
+            //implementare il gioco delle dame
             //        CheckersGame checkersGame = new CheckersGame();
             //        checkersGame.play();
             case 3 -> System.out.println("Reverse not implemented yet");
-            //TODO: implementare il gioco del tris
+            //implementare il gioco del tris
             //        ReverseGame reverseGame = new ReverseGame();
             //        reverseGame.start();
             default -> {
-                System.out.println("Invalid choice");
+                System.err.println("Invalid choice");
                 printMenu();
             }
         }
@@ -47,9 +46,11 @@ public class CliMenuGames implements CliMenu {
         while(!valid) {
             try {
                 input = scanner.nextInt();
+                System.out.println("Input: " + input);
                 valid = true;
             } catch (Exception e) {
-                System.err.println("invalid input");
+                scanner.nextLine();
+                System.err.println("Invalid input, insert a number: ");
             }
         }
         return input;
