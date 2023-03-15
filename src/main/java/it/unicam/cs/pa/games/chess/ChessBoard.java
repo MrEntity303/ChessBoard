@@ -208,7 +208,7 @@ public class ChessBoard implements Board {
         Optional<ChessMove> moveFromList = piece.getList().stream().filter(move -> move.getDestination().equals(destination)).findFirst();
         if (moveFromList.isEmpty()) return false;
 
-        if(this.invalidMoveCheck(piece)) return false;
+        ArrayList<ArrayList<ChessPiece>> boardCopy = this.undoLastMove();
 
         this.addMove(moveFromList.get());
 
@@ -217,6 +217,11 @@ public class ChessBoard implements Board {
         if(this.executePromotion(origin, destination, piece, moveFromList.get())) return true;
 
         this.swapPiece(piece, origin, destination);
+        if(!this.invalidMoveCheck(color)) {
+            this.board = boardCopy;
+            this.movesHistory.remove(this.movesHistory.size() - 1);
+            return false;
+        }
         return true;
         }
 
@@ -231,20 +236,39 @@ public class ChessBoard implements Board {
             this.notifyObservers();
         }
 
-        private boolean invalidMoveCheck(ChessPiece piece)
+        private ArrayList<ArrayList<ChessPiece>> undoLastMove()
         {
-            List<ChessPiece> listPiece = new ArrayList<>();
-            if(piece.getColor() == Color.WHITE)
-                listPiece = ChessBoard.getInstance().observers.stream().filter(o -> o.getColor() == Color.BLACK)/* && o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP)*/.toList();
-            else
-                listPiece = ChessBoard.getInstance().observers.stream().filter(o -> o.getColor() == Color.WHITE)/* && o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP)*/.toList();
-            listPiece = listPiece.stream().filter(o -> o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP).toList();
-            boolean isInvalid = false;
-            for (ChessPiece pieceApp: listPiece) {
-                isInvalid = pieceApp.getList().stream().anyMatch(move -> move.getDestination().equals(ChessBoard.getInstance().getPosition(piece)));
-                if(isInvalid) break;
+            ArrayList<ArrayList<ChessPiece>> boardCopy = new ArrayList<>();
+            for (ArrayList<ChessPiece> chessPieces : board) {
+                ArrayList<ChessPiece> row = new ArrayList<>(chessPieces);
+                boardCopy.add(row);
             }
-            return isInvalid;
+            return boardCopy;
+        }
+
+        private boolean invalidMoveCheck(Color color){
+            Position positionKing = null;
+            for (ChessPiece piece:ChessBoard.getInstance().getObservers())
+                if (piece.getType() == ChessPieceType.KING && piece.getColor() == color)
+                    positionKing = ChessBoard.getInstance().getPosition(piece);
+            if(positionKing != null)
+                for (ChessPiece piece: ChessBoard.getInstance().getObservers())
+                    for (ChessMove move : piece.getList())
+                        if(move.getDestination().equals(positionKing))
+                            return false;
+            return true;
+//            List<ChessPiece> listPiece;
+//            if(piece.getColor() == Color.WHITE)
+//                listPiece = ChessBoard.getInstance().observers.stream().filter(o -> o.getColor() == Color.BLACK)/* && o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP)*/.toList();
+//            else
+//                listPiece = ChessBoard.getInstance().observers.stream().filter(o -> o.getColor() == Color.WHITE)/* && o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP)*/.toList();
+//            listPiece = listPiece.stream().filter(o -> o.getType() == ChessPieceType.ROOK || o.getType() == ChessPieceType.QUEEN||o.getType() == ChessPieceType.BISHOP).toList();
+//            boolean isInvalid = false;
+//            for (ChessPiece pieceApp: listPiece) {
+//                isInvalid = pieceApp.getList().stream().anyMatch(move -> move.getDestination().equals(ChessBoard.getInstance().getPosition(piece)));
+//                if(isInvalid) break;
+//            }
+//            return isInvalid;
         }
 
         /**
